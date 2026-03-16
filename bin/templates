@@ -1,0 +1,165 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/../src/autoload.php';
+
+use BlackCat\Templates\Config\TemplateConfig;
+use BlackCat\Templates\Registry\TemplateRegistry;
+use BlackCat\Templates\Renderer\TemplateRenderer;
+use BlackCat\Templates\Security\SecurityScanner;
+use BlackCat\Templates\Telemetry\TemplateMetrics;
+
+$configPath = $argv[1] ?? getenv('BLACKCAT_TEMPLATES_CONFIG') ?? __DIR__ . '/../config/example.templates.php';
+$command = $argv[2] ?? 'help';
+$args = array_slice($argv, 3);
+
+try {
+    $config = TemplateConfig::fromFile($configPath);
+} catch (Throwable $exception) {
+    fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+    exit(1);
+}
+
+$metrics = new TemplateMetrics($config->telemetryFile());
+$scanner = new SecurityScanner($config);
+$registry = new TemplateRegistry($config, $metrics);
+$renderer = new TemplateRenderer($registry, $metrics, $scanner);
+
+$exitCode = 0;
+
+switch ($command) {
+    case 'catalog:list':
+        $payload = array_map(static function ($definition) {
+            /** @var \BlackCat\Templates\Registry\TemplateDefinition $definition */
+            return [
+                'id' => $definition->id(),
+                'name' => $definition->name(),
+                'description' => $definition->description(),
+                'tags' => $definition->tags(),
+                'integrations' => $definition->integrations(),
+                'placeholders' => $definition->placeholders(),
+            ];
+        }, $registry->all());
+        echo json_encode($payload, JSON_PRETTY_PRINT) . PHP_EOL;
+        break;
+    case 'catalog:show':
+        $id = $args[0] ?? null;
+        if ($id === null) {
+            fwrite(STDERR, "Usage: templates <config> catalog:show <templateId>\n");
+            $exitCode = 1;
+            break;
+        }
+        try {
+            $definition = $registry->get($id);
+        } catch (Throwable $exception) {
+            fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+            $exitCode = 1;
+            break;
+        }
+        echo json_encode([
+            'id' => $definition->id(),
+            'name' => $definition->name(),
+            'description' => $definition->description(),
+            'tags' => $definition->tags(),
+            'integrations' => $definition->integrations(),
+            'placeholders' => $definition->placeholders(),
+            'path' => $definition->path(),
+        ], JSON_PRETTY_PRINT) . PHP_EOL;
+        break;
+    case 'template:run':
+        [$templateId, $payloadArg, $destination] = $args + [null, null, null];
+        if ($templateId === null || $payloadArg === null) {
+            fwrite(STDERR, "Usage: templates <config> template:run <templateId> <JSON payload|@file> [destination]\n");
+            $exitCode = 1;
+            break;
+        }
+
+        try {
+            $payload = parsePayload($payloadArg);
+        } catch (Throwable $exception) {
+            fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+            $exitCode = 1;
+            break;
+        }
+
+        try {
+            if ($destination) {
+                $renderer->writeTo($templateId, $payload, $destination);
+                echo "Template written to {$destination}" . PHP_EOL;
+            } else {
+                echo $renderer->render($templateId, $payload) . PHP_EOL;
+            }
+        } catch (Throwable $exception) {
+            fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+            $exitCode = 1;
+        }
+        break;
+    case 'security:scan':
+        $targetId = $args[0] ?? null;
+        $definitions = $targetId ? [$registry->get($targetId)] : $registry->all();
+        foreach ($definitions as $definition) {
+            $issues = $scanner->scan($definition);
+            $metrics->recordSecurityScan($definition->id(), count($issues));
+            if ($issues === []) {
+                echo $definition->id() . " OK" . PHP_EOL;
+                continue;
+            }
+            echo $definition->id() . ' issues:' . PHP_EOL;
+            foreach ($issues as $issue) {
+                echo '  - ' . $issue . PHP_EOL;
+            }
+            $exitCode = 1;
+        }
+        break;
+    case 'integrations:list':
+        echo json_encode($config->integrations(), JSON_PRETTY_PRINT) . PHP_EOL;
+        break;
+    case 'help':
+    default:
+        echo <<<'USAGE'
+Usage: templates <config> <command>
+
+Commands:
+  catalog:list                       List available template definitions.
+  catalog:show <templateId>          Show template metadata + placeholders.
+  template:run <templateId> <data>   Render template with JSON payload (use @file for file input) and optional destination path.
+  security:scan [templateId]         Run security/integration checks for one or all templates.
+  integrations:list                  Output configured integration targets.
+USAGE;
+        if ($command !== 'help') {
+            $exitCode = 1;
+        }
+}
+
+exit($exitCode);
+
+/**
+ * @return array<string,string>
+ */
+function parsePayload(string $argument): array
+{
+    if ($argument === '') {
+        return [];
+    }
+
+    if ($argument[0] === '@') {
+        $file = substr($argument, 1);
+        if (!is_file($file)) {
+            throw new RuntimeException('Payload file not found: ' . $file);
+        }
+        $argument = (string) file_get_contents($file);
+    }
+
+    $payload = json_decode($argument, true);
+    if (!is_array($payload)) {
+        throw new RuntimeException('Payload must be a JSON object.');
+    }
+
+    $normalized = [];
+    foreach ($payload as $key => $value) {
+        $normalized[strtoupper((string) $key)] = (string) $value;
+    }
+
+    return $normalized;
+}

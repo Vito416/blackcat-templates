@@ -1,0 +1,6 @@
+{
+    "MODULE_NAME": "BlackCat Example",
+    "DESCRIPTION": "Example module for smoke tests",
+    "CLI_USAGE": "php bin/example example:run",
+    "TELEMETRY_DESC": "Exports metrics to var/metrics.prom."
+}

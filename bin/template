@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+require __DIR__ . '/../src/autoload.php';
+
+use BlackCat\Templates\Config\TemplateConfig;
+use BlackCat\Templates\Registry\TemplateRegistry;
+use BlackCat\Templates\Renderer\TemplateRenderer;
+use BlackCat\Templates\Security\SecurityScanner;
+use BlackCat\Templates\Telemetry\TemplateMetrics;
+
+$command = $argv[1] ?? 'help';
+$args = array_slice($argv, 2);
+
+if ($command !== 'readme') {
+    fwrite(STDERR, "Usage: template readme <Name> <Description>\n");
+    exit(1);
+}
+
+[$name, $description] = $args + [null, null];
+if ($name === null || $description === null) {
+    fwrite(STDERR, "Usage: template readme <Name> <Description>\n");
+    exit(1);
+}
+
+$configPath = getenv('BLACKCAT_TEMPLATES_CONFIG') ?? __DIR__ . '/../config/example.templates.php';
+$config = TemplateConfig::fromFile($configPath);
+$metrics = new TemplateMetrics($config->telemetryFile());
+$registry = new TemplateRegistry($config, $metrics);
+$renderer = new TemplateRenderer($registry, $metrics, new SecurityScanner($config));
+
+echo $renderer->render('module_readme', [
+    'MODULE_NAME' => $name,
+    'DESCRIPTION' => $description,
+]);
