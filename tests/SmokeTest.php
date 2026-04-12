@@ -17,9 +17,9 @@ $config = TemplateConfig::fromArray([
         'prometheus_file' => sys_get_temp_dir() . '/templates-metrics-' . bin2hex(random_bytes(4)) . '.prom',
     ],
     'security' => [
-        'allowed_extensions' => ['md'],
+        'allowed_extensions' => ['md', 'html'],
         'disallow_php' => true,
-        'require_integrations' => ['blackcat-config'],
+        'require_integrations' => ['blackcat-darkmesh-gateway'],
     ],
 ]);
 
@@ -51,6 +51,14 @@ assert(is_file($tmpRoadmap));
 
 $issues = $scanner->scan($registry->get('module_readme'));
 assert($issues === [], 'Expected template security scan to pass.');
+
+$searchTemplate = $renderer->render('gateway_search_variant_signal', [
+    'SITE_TITLE' => 'Darkmesh Search',
+    'GATEWAY_ORIGIN' => 'https://gateway.example',
+    'SEARCH_ACTION' => 'public.resolve-route',
+]);
+assert(str_contains($searchTemplate, 'Darkmesh Search'));
+assert(str_contains($searchTemplate, 'public.resolve-route'));
 
 $metricsFile = $config->telemetryFile();
 assert(is_string($metricsFile));

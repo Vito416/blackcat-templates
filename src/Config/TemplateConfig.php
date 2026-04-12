@@ -159,9 +159,15 @@ final class TemplateConfig
         $targetEnv = $profileConfig['environment'] ?? null;
         $targetName = $profileConfig['name'] ?? null;
 
-        $autoload = dirname(__DIR__, 3) . '/blackcat-config/src/autoload.php';
-        if (is_file($autoload)) {
-            require_once $autoload;
+        $autoloadCandidates = [
+            dirname(__DIR__, 3) . '/blackcat-config/src/autoload.php',
+            dirname(__DIR__, 3) . '/blackcat-darkmesh-gateway/libs/legacy/blackcat-config/src/autoload.php',
+        ];
+        foreach ($autoloadCandidates as $autoload) {
+            if (is_file($autoload)) {
+                require_once $autoload;
+                break;
+            }
         }
 
         if (class_exists('\\BlackCat\\Config\\Config\\ProfileConfig')) {

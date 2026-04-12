@@ -1,0 +1,21 @@
+{
+  "releaseVersion": "1.0.0",
+  "generatedAt": "2026-04-12T00:00:00Z",
+  "variants": {
+    "signal": {
+      "templateId": "gateway_search_variant_signal",
+      "txId": "REPLACE_WITH_ARWEAVE_TXID",
+      "sha256": "REPLACE_WITH_SHA256"
+    },
+    "bastion": {
+      "templateId": "gateway_search_variant_bastion",
+      "txId": "REPLACE_WITH_ARWEAVE_TXID",
+      "sha256": "REPLACE_WITH_SHA256"
+    },
+    "horizon": {
+      "templateId": "gateway_search_variant_horizon",
+      "txId": "REPLACE_WITH_ARWEAVE_TXID",
+      "sha256": "REPLACE_WITH_SHA256"
+    }
+  }
+}

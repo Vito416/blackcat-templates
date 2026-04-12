@@ -1,46 +1,54 @@
-# BlackCat Templates
+# BlackCat Darkmesh Templates
 
-CLI + registry for scaffolding README/ROADMAP templates that reference shared config, database, auth, and orchestrator flows across the ecosystem. Stage 1 now ships a fully automated loader, telemetry, security scanner, and smoke tests so installers can safely compose docs.
+Template registry and CLI for public, verifiable assets used by the Blackcat Darkmesh ecosystem.
+This repo now includes:
+- docs/scaffolding templates (`module_readme`, `module_roadmap`)
+- gateway search UX templates with three distinct variants:
+  - `gateway_search_variant_signal`
+  - `gateway_search_variant_bastion`
+  - `gateway_search_variant_horizon`
 
-## Stage 1 – Foundation ✅
-- **Config loader** – `config/example.templates.php` resolves `${env:}`/`${file:}` secrets and syncs with `blackcat-config` profiles.
-- **CLI** – `bin/templates` exposes `catalog:list`, `catalog:show`, `template:run`, `security:scan`, and `integrations:list` commands that downstream tooling can call.
-- **Security & integrations** – every template declares required integrations (database/auth/orchestrator) enforced by the scanner.
-- **Telemetry** – metrics land in `var/metrics.prom` (`template_catalog_total`, `template_render_total`, `template_security_issues`).
-- **Docs & tests** – README/ROADMAP updated and `tests/SmokeTest.php` validates rendering + scanners.
+## What this repo is for
+- Keep template bundles outside gateway runtime code.
+- Render deterministic, auditable artifacts before publish (for Arweave release flow).
+- Enforce a basic security policy and integration declarations per template.
 
-## Getting Started
+## Quick Start
 ```bash
-export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/blackcat-templates/config/example.templates.php
+export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/blackcat-darkmesh-templates/config/example.templates.php
 
-# Inspect catalog
-php blackcat-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG catalog:list
-php blackcat-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG catalog:show module_readme
+# Catalog / metadata
+php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG catalog:list
+php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG catalog:show gateway_search_variant_signal
 
-# Render templates (inline JSON or @file)
-php blackcat-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run module_readme '{"MODULE_NAME":"BlackCat Payments","DESCRIPTION":"Stage 1 bootstrap"}'
-php blackcat-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run module_roadmap @blackcat-templates/tests/fixtures/module-readme.json var/generated-roadmap.md
+# Render docs template
+php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run module_readme '{"MODULE_NAME":"BlackCat Payments","DESCRIPTION":"Gateway + AO write boundary"}'
 
-# Security/integration checks
-php blackcat-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG security:scan
+# Render one gateway-search variant
+php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run gateway_search_variant_bastion '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/gateway-search-bastion.html
+
+# Security checks
+php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG security:scan
 ```
 
 Backwards-compatible shorthand:
 ```bash
-php blackcat-templates/bin/template readme "BlackCat Foo" "Short description"
+php blackcat-darkmesh-templates/bin/template readme "BlackCat Foo" "Short description"
 ```
-Uses the same config loader + telemetry pipeline under the hood.
 
-## Telemetry & Integrations
-- Prometheus metrics: `var/metrics.prom` (scraped by `blackcat-observability`).
-- Registry integrates with `blackcat-config` (profiles), `blackcat-database` (schema references), `blackcat-auth`, and `blackcat-orchestrator` workflow manifests defined in config.
-- Security scans enforce that templates reference required integrations before publishing.
+## Telemetry
+- Prometheus output file: `var/metrics.prom`
+- Counters: `template_catalog_total`, `template_render_total`, `template_security_issues`
 
 ## Testing
+```bash
+php blackcat-darkmesh-templates/tests/SmokeTest.php
 ```
-php blackcat-templates/tests/SmokeTest.php
-```
-Runs registry boot, renders both templates, writes temp roadmap, executes security scan, and ensures metrics are emitted. Wire this into CI or `blackcat-cli verify` for smoke coverage.
+Smoke test boots registry, renders templates, runs security scan, and verifies metrics output.
+
+## Gateway search release docs
+- Runbook: `docs/GATEWAY_SEARCH_RELEASE.md`
+- Variant map example: `docs/gateway-search-variant-map.example.json`
 
 ## Licensing
 

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace BlackCat\Templates;
 
 /**
- * Auto-generated descriptor stub to anchor blackcat-templates source tree.
+ * Auto-generated descriptor stub to anchor blackcat-darkmesh-templates source tree.
  * Populate orchestrators/services per docs/ROADMAP.md.
  */
 final class Manifest
 {
-    public const REPOSITORY = 'blackcat-templates';
+    public const REPOSITORY = 'blackcat-darkmesh-templates';
 
     public static function describe(): array
     {

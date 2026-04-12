@@ -5,16 +5,16 @@
 ## Stage 1 – Foundation
 {{STAGE1_FOCUS}}
 
-- Config + secrets orchestrated by `blackcat-config`.
-- Workflows dispatched through `blackcat-orchestrator` for seed runs.
+- Config + secrets orchestrated by gateway/worker boundary contracts.
+- Workflows dispatched through gateway release runbooks for seed runs.
 - Database + telemetry wiring documented in README and `docs/ROADMAP.md`.
 
 ## Stage 2 – Scale
 {{STAGE2_FOCUS}}
 
-- Harden integrations with `blackcat-governance` for audit trails.
-- Expand CLI surface for installer automation and `blackcat-cli scaffold` usage.
-- Add policy testing hooks referencing `blackcat-security`.
+- Harden integrations with AO/write contracts for audit trails.
+- Expand CLI surface for template automation and release evidence generation.
+- Add policy testing hooks referencing gateway security checks.
 
 ## Compliance & Ownership
 - Maintainer / DRI: {{COMPLIANCE_OWNER}}

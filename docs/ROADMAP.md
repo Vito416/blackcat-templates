@@ -1,25 +1,21 @@
 # Templates – Roadmap
 
 ## Stage 1 – Foundation ✅
-- Catalog + config loader (`config/example.templates.php`) referencing `blackcat-config`, `blackcat-database`, `blackcat-auth`, `blackcat-orchestrator`.
-- CLI `bin/templates` with `catalog:list|show`, `template:run`, `security:scan`, `integrations:list` + backward compatible `bin/template readme`.
-- Telemetry/metrics + Prometheus writer and smoke tests guarding template rendering and security checks.
+- Catalog + config loader (`config/example.templates.php`) with deterministic CLI rendering.
+- CLI `bin/templates` (`catalog:list|show`, `template:run`, `security:scan`, `integrations:list`) plus compatibility wrapper `bin/template`.
+- Telemetry (`var/metrics.prom`) and smoke tests for rendering + scanner behavior.
 
-## Stage 2 – GitHub/Automation Templates (WIP)
-- Expand catalog with workflow/issue templates + JSON Schema metadata.
-- Stream rendered outputs to `blackcat-orchestrator` for auto PR creation.
-- Add CI contract tests ensuring `blackcat-cli scaffold` consumes the same API.
+## Stage 2 – Gateway Search Templates ✅
+- Added three distinct gateway-search UX variants (`signal`, `bastion`, `horizon`) as public templates.
+- Added placeholders required for universal gateway routing (`SITE_TITLE`, `GATEWAY_ORIGIN`, `SEARCH_ACTION`).
+- Kept templates stateless and secret-free so bundles can be published to Arweave.
 
-## Stage 3 – CLI command `blackcat-cli scaffold`
-- Package templates as modules for `blackcat-cli`.
-- Provide policy enforcement hooks w/ `blackcat-governance` and `blackcat-security`.
+## Stage 3 – Release Automation (next)
+- Add template release manifest generation (`variant -> txid/hash`) for gateway operators.
+- Add CI checks that rendered bundles remain deterministic across runs.
+- Add schema validation for template release metadata consumed by gateway config.
 
-## Stage 4 – Cross-Ecosystem Automation
-- Wire blackcat-templates services into installer/orchestrator pipelines for push-button deployments.
-- Expand contract tests covering dependencies listed in ECOSYSTEM.md.
-- Publish metrics/controls so observability, security, and governance repos can reason about blackcat-templates automatically.
-
-## Stage 5 – Continuous AI Augmentation
-- Ship AI-ready manifests/tutorials enabling GPT installers to compose blackcat-templates stacks autonomously.
-- Add self-healing + policy feedback loops leveraging blackcat-agent, blackcat-governance, and marketplace signals.
-- Feed anonymized adoption data to blackcat-usage and reward contributors via blackcat-payout.
+## Stage 4 – Template Marketplace Readiness (next)
+- Add formal template metadata (compatibility matrix, required gateway minimum version).
+- Add release notes/changelog per template variant.
+- Add starter snippets for `blackcat-darkmesh-web` builder integration.
