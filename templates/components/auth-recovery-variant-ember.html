@@ -1,0 +1,139 @@
+<section class="overflow-hidden rounded-[2rem] border border-orange-200/20 bg-[radial-gradient(circle_at_top,rgba(251,146,60,0.22),transparent_35%),linear-gradient(180deg,rgba(32,14,8,0.98),rgba(17,10,8,0.98))] text-stone-100 shadow-[0_28px_90px_rgba(17,10,8,0.55)]">
+  <div class="mx-auto max-w-3xl p-6 md:p-8">
+    <div class="rounded-[1.75rem] border border-orange-200/15 bg-black/20 p-5 backdrop-blur md:p-7">
+      <div class="grid gap-6 lg:grid-cols-[1fr_0.82fr] lg:items-start">
+        <div class="space-y-5">
+          <div class="inline-flex items-center gap-2 rounded-full border border-orange-200/20 bg-orange-200/10 px-3 py-1 text-[0.7rem] font-black uppercase tracking-[0.22em] text-orange-100">
+            Ember Recovery
+          </div>
+
+          <div class="space-y-3">
+            <h2 class="font-display text-4xl font-black leading-tight text-white md:text-5xl">{{RECOVERY_TITLE}}</h2>
+            <p class="max-w-xl text-sm leading-6 text-stone-300 md:text-base">
+              Send a reset link to the inbox tied to your account. The form stays fragment-safe and uses a lightweight email guard.
+            </p>
+          </div>
+
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div class="rounded-[1.35rem] border border-white/10 bg-white/5 p-4">
+              <p class="text-[0.7rem] font-black uppercase tracking-[0.18em] text-orange-200">Warm</p>
+              <p class="mt-2 text-sm text-stone-300">Soft ember tones distinguish recovery from registration.</p>
+            </div>
+            <div class="rounded-[1.35rem] border border-white/10 bg-white/5 p-4">
+              <p class="text-[0.7rem] font-black uppercase tracking-[0.18em] text-amber-200">Inline</p>
+              <p class="mt-2 text-sm text-stone-300">Validation messages appear beside the field and in the status bar.</p>
+            </div>
+            <div class="rounded-[1.35rem] border border-white/10 bg-white/5 p-4">
+              <p class="text-[0.7rem] font-black uppercase tracking-[0.18em] text-stone-200">Safe</p>
+              <p class="mt-2 text-sm text-stone-300">Designed to be dropped into shell templates without page-level assumptions.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="absolute inset-0 rounded-[1.6rem] bg-[radial-gradient(circle_at_top,rgba(251,146,60,0.16),transparent_38%)]"></div>
+          <form id="auth-recovery-ember-form" action="{{RECOVERY_ACTION}}" method="{{RECOVERY_METHOD}}" class="relative rounded-[1.6rem] border border-orange-200/15 bg-slate-950/55 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+            <div class="space-y-4">
+              <label class="block space-y-2">
+                <span class="text-xs font-black uppercase tracking-[0.18em] text-stone-300">Email address</span>
+                <input
+                  id="auth-recovery-ember-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  required
+                  placeholder="name@domain.com"
+                  class="w-full rounded-2xl border border-white/10 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-orange-300 focus:ring-2 focus:ring-orange-300/25"
+                />
+                <p id="auth-recovery-ember-email-error" class="min-h-5 text-sm text-rose-200"></p>
+              </label>
+
+              <button
+                id="auth-recovery-ember-submit"
+                type="submit"
+                class="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-orange-400 via-amber-300 to-yellow-200 px-4 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {{RECOVERY_CTA_LABEL}}
+              </button>
+
+              <div
+                id="auth-recovery-ember-status"
+                class="min-h-12 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-stone-200"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                Ready to send a recovery link.
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const form = document.getElementById("auth-recovery-ember-form");
+  if (!form) return;
+
+  const email = document.getElementById("auth-recovery-ember-email");
+  const submit = document.getElementById("auth-recovery-ember-submit");
+  const status = document.getElementById("auth-recovery-ember-status");
+  const emailError = document.getElementById("auth-recovery-ember-email-error");
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setFieldState(field, errorNode, message) {
+    field.setAttribute("aria-invalid", message ? "true" : "false");
+    errorNode.textContent = message || "";
+  }
+
+  function setStatus(message, tone) {
+    status.textContent = message;
+    status.className = tone === "error"
+      ? "min-h-12 rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-rose-100"
+      : tone === "success"
+      ? "min-h-12 rounded-2xl border border-emerald-400/15 bg-emerald-400/8 px-4 py-3 text-sm text-emerald-100"
+      : "min-h-12 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-stone-200";
+  }
+
+  function validate() {
+    const value = email.value.trim();
+
+    if (!value) {
+      setFieldState(email, emailError, "Email is required.");
+      submit.disabled = true;
+      return false;
+    }
+
+    if (!emailPattern.test(value)) {
+      setFieldState(email, emailError, "Enter a valid email address.");
+      submit.disabled = true;
+      return false;
+    }
+
+    setFieldState(email, emailError, "");
+    submit.disabled = false;
+    return true;
+  }
+
+  ["input", "blur"].forEach((eventName) => {
+    email.addEventListener(eventName, validate);
+  });
+
+  form.addEventListener("submit", (event) => {
+    if (!validate()) {
+      event.preventDefault();
+      setStatus("Enter a valid email address to continue.", "error");
+      return;
+    }
+
+    submit.disabled = true;
+    submit.setAttribute("aria-busy", "true");
+    setStatus("Sending recovery instructions...", "success");
+  });
+
+  validate();
+})();
+</script>

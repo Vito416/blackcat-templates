@@ -1,0 +1,240 @@
+<section class="account-pulsegrid" data-account-component="pulsegrid" aria-labelledby="account-pulsegrid-title">
+  <style>
+    .account-pulsegrid {
+      --pulse-bg: rgba(9, 11, 16, 0.96);
+      --pulse-panel: rgba(255, 255, 255, 0.05);
+      --pulse-border: rgba(255, 255, 255, 0.14);
+      --pulse-text: #f5f7fb;
+      --pulse-muted: rgba(245, 247, 251, 0.7);
+      --pulse-accent: #79b8ff;
+      color: var(--pulse-text);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(121, 184, 255, 0.2), transparent 24%),
+        radial-gradient(circle at 85% 15%, rgba(160, 108, 255, 0.16), transparent 22%),
+        linear-gradient(165deg, rgba(16, 19, 28, 0.98), var(--pulse-bg));
+      border: 1px solid var(--pulse-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+    }
+
+    .account-pulsegrid__inner {
+      display: grid;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+
+    .account-pulsegrid__header,
+    .account-pulsegrid__filters,
+    .account-pulsegrid__list {
+      border: 1px solid var(--pulse-border);
+      background: var(--pulse-panel);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+    }
+
+    .account-pulsegrid__header {
+      display: grid;
+      gap: 0.75rem;
+      padding: 1rem;
+    }
+
+    .account-pulsegrid__eyebrow {
+      margin: 0;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--pulse-accent);
+    }
+
+    .account-pulsegrid__title {
+      margin: 0;
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+    }
+
+    .account-pulsegrid__subtitle {
+      margin: 0;
+      max-width: 64ch;
+      color: var(--pulse-muted);
+      line-height: 1.6;
+    }
+
+    .account-pulsegrid__filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.5rem;
+    }
+
+    .account-pulsegrid__filter {
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0.65rem 0.9rem;
+      background: transparent;
+      color: var(--pulse-muted);
+      font: inherit;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .account-pulsegrid__filter[aria-pressed="true"] {
+      border-color: rgba(121, 184, 255, 0.48);
+      background: rgba(121, 184, 255, 0.12);
+      color: var(--pulse-text);
+    }
+
+    .account-pulsegrid__filter:focus-visible,
+    .account-pulsegrid__action:focus-visible {
+      outline: 2px solid var(--pulse-accent);
+      outline-offset: 2px;
+    }
+
+    .account-pulsegrid__list {
+      padding: 0.5rem;
+    }
+
+    .account-pulsegrid__items {
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .account-pulsegrid__item {
+      display: grid;
+      gap: 0.75rem;
+      padding: 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .account-pulsegrid__item[data-read="true"] {
+      opacity: 0.72;
+    }
+
+    .account-pulsegrid__item-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .account-pulsegrid__item-title {
+      margin: 0;
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .account-pulsegrid__item-meta {
+      margin: 0;
+      color: var(--pulse-muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+
+    .account-pulsegrid__action {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      padding: 0.55rem 0.8rem;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--pulse-text);
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .account-pulsegrid__item-body {
+      color: var(--pulse-muted);
+      line-height: 1.6;
+    }
+
+    .account-pulsegrid__empty {
+      padding: 1rem;
+      color: var(--pulse-muted);
+      line-height: 1.6;
+    }
+
+    .account-pulsegrid__empty[hidden] {
+      display: none;
+    }
+
+    @media (min-width: 860px) {
+      .account-pulsegrid__inner {
+        padding: 1.5rem;
+      }
+
+      .account-pulsegrid__header {
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+        align-items: end;
+      }
+    }
+  </style>
+
+  <div class="account-pulsegrid__inner">
+    <header class="account-pulsegrid__header">
+      <div>
+        <p class="account-pulsegrid__eyebrow">{{NOTIFICATIONS_EYEBROW_LABEL}}</p>
+        <h2 id="account-pulsegrid-title" class="account-pulsegrid__title">{{NOTIFICATIONS_TITLE}}</h2>
+        <p class="account-pulsegrid__subtitle">{{NOTIFICATIONS_SUBTITLE}}</p>
+      </div>
+      <div class="account-pulsegrid__filters" aria-label="{{NOTIFICATIONS_FILTERS_LABEL}}">
+        {{NOTIFICATIONS_FILTERS_HTML}}
+      </div>
+    </header>
+
+    <div class="account-pulsegrid__list" aria-label="{{NOTIFICATIONS_LIST_LABEL}}">
+      <ul class="account-pulsegrid__items">
+        {{NOTIFICATION_ITEMS_HTML}}
+      </ul>
+    </div>
+
+    <div class="account-pulsegrid__empty" aria-live="polite">
+      {{NOTIFICATIONS_EMPTY_HTML}}
+    </div>
+  </div>
+</section>
+<script>
+  (function () {
+    var section = document.currentScript && document.currentScript.previousElementSibling;
+    if (!section || !section.matches('.account-pulsegrid')) return;
+
+    function syncButton(button, item) {
+      var isRead = item.getAttribute('data-read') === 'true';
+      button.setAttribute('aria-pressed', String(isRead));
+      if (button.dataset.labelRead && button.dataset.labelUnread) {
+        button.textContent = isRead ? button.dataset.labelUnread : button.dataset.labelRead;
+      }
+    }
+
+    section.addEventListener('click', function (event) {
+      var button = event.target.closest('[data-notification-toggle]');
+      if (!button || !section.contains(button)) return;
+
+      var item = button.closest('[data-notification-item]');
+      if (!item) return;
+
+      var isRead = item.getAttribute('data-read') === 'true';
+      item.setAttribute('data-read', String(!isRead));
+      syncButton(button, item);
+    });
+
+    Array.prototype.slice.call(section.querySelectorAll('[data-notification-item]')).forEach(function (item) {
+      var button = item.querySelector('[data-notification-toggle]');
+      if (button) syncButton(button, item);
+    });
+  })();
+</script>

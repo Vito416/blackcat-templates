@@ -1,0 +1,328 @@
+<section class="account-axis" data-account-component="axis" aria-labelledby="account-axis-title">
+  <style>
+    .account-axis {
+      --axis-bg: rgba(8, 12, 20, 0.92);
+      --axis-panel: rgba(255, 255, 255, 0.05);
+      --axis-border: rgba(255, 255, 255, 0.14);
+      --axis-accent: #8ef0d1;
+      --axis-text: #f3f7fb;
+      --axis-muted: rgba(243, 247, 251, 0.72);
+      color: var(--axis-text);
+      background:
+        radial-gradient(circle at top left, rgba(142, 240, 209, 0.16), transparent 28%),
+        linear-gradient(160deg, rgba(18, 26, 40, 0.98), var(--axis-bg));
+      border: 1px solid var(--axis-border);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+    }
+
+    .account-axis__inner {
+      display: grid;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+
+    .account-axis__header,
+    .account-axis__panel,
+    .account-axis__tabs {
+      border: 1px solid var(--axis-border);
+      background: var(--axis-panel);
+      backdrop-filter: blur(10px);
+    }
+
+    .account-axis__header {
+      display: grid;
+      gap: 0.75rem;
+      padding: 1rem;
+      border-radius: 18px;
+    }
+
+    .account-axis__eyebrow {
+      margin: 0;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--axis-accent);
+    }
+
+    .account-axis__title {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+
+    .account-axis__subtitle {
+      margin: 0;
+      max-width: 65ch;
+      color: var(--axis-muted);
+      line-height: 1.6;
+    }
+
+    .account-axis__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .account-axis__tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 18px;
+    }
+
+    .account-axis__tab {
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 0.75rem 1rem;
+      background: transparent;
+      color: var(--axis-muted);
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+    }
+
+    .account-axis__tab[aria-selected="true"] {
+      border-color: rgba(142, 240, 209, 0.5);
+      background: rgba(142, 240, 209, 0.12);
+      color: var(--axis-text);
+    }
+
+    .account-axis__tab:focus-visible,
+    .account-axis__action:focus-visible,
+    .account-axis__link:focus-visible {
+      outline: 2px solid var(--axis-accent);
+      outline-offset: 2px;
+    }
+
+    .account-axis__panels {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .account-axis__panel {
+      display: grid;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 18px;
+    }
+
+    .account-axis__panel[hidden] {
+      display: none;
+    }
+
+    .account-axis__panel-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .account-axis__panel-title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .account-axis__action,
+    .account-axis__link {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 0.62rem 0.9rem;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--axis-text);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-decoration: none;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .account-axis__slot {
+      color: var(--axis-muted);
+      line-height: 1.6;
+    }
+
+    @media (min-width: 860px) {
+      .account-axis__inner {
+        padding: 1.5rem;
+      }
+
+      .account-axis__header {
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        align-items: end;
+      }
+
+      .account-axis__meta {
+        justify-content: flex-end;
+      }
+    }
+  </style>
+
+  <div class="account-axis__inner">
+    <header class="account-axis__header">
+      <div>
+        <p class="account-axis__eyebrow">{{ACCOUNT_EYEBROW_LABEL}}</p>
+        <h2 id="account-axis-title" class="account-axis__title">{{ACCOUNT_TITLE}}</h2>
+        <p class="account-axis__subtitle">{{ACCOUNT_SUBTITLE}}</p>
+      </div>
+      <div class="account-axis__meta" aria-label="{{ACCOUNT_META_LABEL}}">
+        {{ACCOUNT_META_HTML}}
+      </div>
+    </header>
+
+    <div class="account-axis__tabs" role="tablist" aria-label="{{ACCOUNT_TABLIST_LABEL}}">
+      <button
+        type="button"
+        class="account-axis__tab"
+        role="tab"
+        id="account-axis-tab-overview"
+        aria-controls="account-axis-panel-overview"
+        aria-selected="true"
+        data-account-tab="overview"
+      >
+        {{ACCOUNT_OVERVIEW_TAB_LABEL}}
+      </button>
+      <button
+        type="button"
+        class="account-axis__tab"
+        role="tab"
+        id="account-axis-tab-orders"
+        aria-controls="account-axis-panel-orders"
+        aria-selected="false"
+        data-account-tab="orders"
+      >
+        {{ACCOUNT_ORDERS_TAB_LABEL}}
+      </button>
+      <button
+        type="button"
+        class="account-axis__tab"
+        role="tab"
+        id="account-axis-tab-security"
+        aria-controls="account-axis-panel-security"
+        aria-selected="false"
+        data-account-tab="security"
+      >
+        {{ACCOUNT_SECURITY_TAB_LABEL}}
+      </button>
+      <button
+        type="button"
+        class="account-axis__tab"
+        role="tab"
+        id="account-axis-tab-notifications"
+        aria-controls="account-axis-panel-notifications"
+        aria-selected="false"
+        data-account-tab="notifications"
+      >
+        {{ACCOUNT_NOTIFICATIONS_TAB_LABEL}}
+      </button>
+    </div>
+
+    <div class="account-axis__panels">
+      <article
+        class="account-axis__panel"
+        role="tabpanel"
+        id="account-axis-panel-overview"
+        aria-labelledby="account-axis-tab-overview"
+        data-account-panel="overview"
+      >
+        <div class="account-axis__panel-head">
+          <h3 class="account-axis__panel-title">{{ACCOUNT_OVERVIEW_PANEL_TITLE}}</h3>
+          <a class="account-axis__link" href="{{ACCOUNT_OVERVIEW_ACTION_HREF}}">{{ACCOUNT_OVERVIEW_ACTION_LABEL}}</a>
+        </div>
+        <div class="account-axis__slot">{{ACCOUNT_OVERVIEW_HTML}}</div>
+      </article>
+
+      <article
+        class="account-axis__panel"
+        role="tabpanel"
+        id="account-axis-panel-orders"
+        aria-labelledby="account-axis-tab-orders"
+        data-account-panel="orders"
+        hidden
+      >
+        <div class="account-axis__panel-head">
+          <h3 class="account-axis__panel-title">{{ACCOUNT_ORDERS_PANEL_TITLE}}</h3>
+          <a class="account-axis__link" href="{{ACCOUNT_ORDERS_ACTION_HREF}}">{{ACCOUNT_ORDERS_ACTION_LABEL}}</a>
+        </div>
+        <div class="account-axis__slot">{{ACCOUNT_ORDERS_HTML}}</div>
+      </article>
+
+      <article
+        class="account-axis__panel"
+        role="tabpanel"
+        id="account-axis-panel-security"
+        aria-labelledby="account-axis-tab-security"
+        data-account-panel="security"
+        hidden
+      >
+        <div class="account-axis__panel-head">
+          <h3 class="account-axis__panel-title">{{ACCOUNT_SECURITY_PANEL_TITLE}}</h3>
+          <a class="account-axis__link" href="{{ACCOUNT_SECURITY_ACTION_HREF}}">{{ACCOUNT_SECURITY_ACTION_LABEL}}</a>
+        </div>
+        <div class="account-axis__slot">{{ACCOUNT_SECURITY_HTML}}</div>
+      </article>
+
+      <article
+        class="account-axis__panel"
+        role="tabpanel"
+        id="account-axis-panel-notifications"
+        aria-labelledby="account-axis-tab-notifications"
+        data-account-panel="notifications"
+        hidden
+      >
+        <div class="account-axis__panel-head">
+          <h3 class="account-axis__panel-title">{{ACCOUNT_NOTIFICATIONS_PANEL_TITLE}}</h3>
+          <a class="account-axis__link" href="{{ACCOUNT_NOTIFICATIONS_ACTION_HREF}}">{{ACCOUNT_NOTIFICATIONS_ACTION_LABEL}}</a>
+        </div>
+        <div class="account-axis__slot">{{ACCOUNT_NOTIFICATIONS_HTML}}</div>
+      </article>
+    </div>
+  </div>
+</section>
+<script>
+  (function () {
+    var section = document.currentScript && document.currentScript.previousElementSibling;
+    if (!section || !section.matches('.account-axis')) return;
+
+    var tabs = Array.prototype.slice.call(section.querySelectorAll('[data-account-tab]'));
+    var panels = Array.prototype.slice.call(section.querySelectorAll('[data-account-panel]'));
+
+    function activate(name) {
+      tabs.forEach(function (tab) {
+        var isActive = tab.getAttribute('data-account-tab') === name;
+        tab.setAttribute('aria-selected', String(isActive));
+        tab.tabIndex = isActive ? 0 : -1;
+      });
+
+      panels.forEach(function (panel) {
+        var isActive = panel.getAttribute('data-account-panel') === name;
+        panel.hidden = !isActive;
+        panel.setAttribute('aria-hidden', String(!isActive));
+      });
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        activate(tab.getAttribute('data-account-tab'));
+      });
+    });
+
+    if (tabs.length) {
+      activate(tabs[0].getAttribute('data-account-tab'));
+    }
+  })();
+</script>

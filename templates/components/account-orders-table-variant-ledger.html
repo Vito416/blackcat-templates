@@ -1,0 +1,205 @@
+<section class="account-ledger" data-account-component="ledger" aria-labelledby="account-ledger-title">
+  <style>
+    .account-ledger {
+      --ledger-bg: rgba(255, 255, 255, 0.96);
+      --ledger-panel: rgba(11, 18, 28, 0.04);
+      --ledger-border: rgba(11, 18, 28, 0.14);
+      --ledger-text: #0b121c;
+      --ledger-muted: rgba(11, 18, 28, 0.68);
+      --ledger-accent: #0f7b66;
+      color: var(--ledger-text);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 247, 250, 0.98)),
+        radial-gradient(circle at top right, rgba(15, 123, 102, 0.09), transparent 26%);
+      border: 1px solid var(--ledger-border);
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(11, 18, 28, 0.12);
+      overflow: hidden;
+    }
+
+    .account-ledger__inner {
+      display: grid;
+      gap: 1rem;
+      padding: 1.25rem;
+    }
+
+    .account-ledger__header,
+    .account-ledger__toolbar,
+    .account-ledger__table-wrap,
+    .account-ledger__empty {
+      border: 1px solid var(--ledger-border);
+      background: var(--ledger-panel);
+      border-radius: 18px;
+    }
+
+    .account-ledger__header {
+      display: grid;
+      gap: 0.75rem;
+      padding: 1rem;
+    }
+
+    .account-ledger__eyebrow {
+      margin: 0;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ledger-accent);
+    }
+
+    .account-ledger__title {
+      margin: 0;
+      font-size: clamp(1.9rem, 4vw, 3rem);
+      line-height: 0.96;
+      letter-spacing: -0.05em;
+    }
+
+    .account-ledger__subtitle {
+      margin: 0;
+      max-width: 62ch;
+      color: var(--ledger-muted);
+      line-height: 1.6;
+    }
+
+    .account-ledger__toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1rem;
+    }
+
+    .account-ledger__filters,
+    .account-ledger__summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .account-ledger__chip {
+      border: 1px solid var(--ledger-border);
+      border-radius: 999px;
+      padding: 0.55rem 0.8rem;
+      background: rgba(255, 255, 255, 0.5);
+      color: var(--ledger-text);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .account-ledger__table-wrap {
+      overflow: auto;
+    }
+
+    .account-ledger__table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+
+    .account-ledger__table caption {
+      padding: 1rem 1rem 0;
+      text-align: left;
+      color: var(--ledger-muted);
+      font-size: 0.9rem;
+    }
+
+    .account-ledger__table th,
+    .account-ledger__table td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--ledger-border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .account-ledger__table th {
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ledger-muted);
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .account-ledger__table tbody tr:hover {
+      background: rgba(15, 123, 102, 0.05);
+    }
+
+    .account-ledger__table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .account-ledger__empty {
+      padding: 1rem;
+      color: var(--ledger-muted);
+      line-height: 1.6;
+    }
+
+    .account-ledger__empty[hidden] {
+      display: none;
+    }
+
+    @media (min-width: 860px) {
+      .account-ledger__inner {
+        padding: 1.5rem;
+      }
+
+      .account-ledger__header {
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+        align-items: end;
+      }
+
+      .account-ledger__summary {
+        justify-content: flex-end;
+      }
+    }
+  </style>
+
+  <div class="account-ledger__inner">
+    <header class="account-ledger__header">
+      <div>
+        <p class="account-ledger__eyebrow">{{ORDERS_EYEBROW_LABEL}}</p>
+        <h2 id="account-ledger-title" class="account-ledger__title">{{ORDERS_TITLE}}</h2>
+        <p class="account-ledger__subtitle">{{ORDERS_SUBTITLE}}</p>
+      </div>
+      <div class="account-ledger__summary" aria-label="{{ORDERS_SUMMARY_LABEL}}">
+        {{ORDERS_SUMMARY_HTML}}
+      </div>
+    </header>
+
+    <div class="account-ledger__toolbar">
+      <div class="account-ledger__filters" aria-label="{{ORDERS_FILTERS_LABEL}}">
+        {{ORDERS_FILTERS_HTML}}
+      </div>
+      <div class="account-ledger__summary">
+        {{ORDERS_TOOLBAR_HTML}}
+      </div>
+    </div>
+
+    <div class="account-ledger__table-wrap" role="region" aria-labelledby="account-ledger-title" tabindex="0">
+      <table class="account-ledger__table">
+        <caption>{{ORDERS_TABLE_CAPTION}}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ORDERS_COLUMN_ID_LABEL}}</th>
+            <th scope="col">{{ORDERS_COLUMN_DATE_LABEL}}</th>
+            <th scope="col">{{ORDERS_COLUMN_STATUS_LABEL}}</th>
+            <th scope="col">{{ORDERS_COLUMN_TOTAL_LABEL}}</th>
+            <th scope="col">{{ORDERS_COLUMN_FULFILLMENT_LABEL}}</th>
+            <th scope="col">{{ORDERS_COLUMN_ACTIONS_LABEL}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ORDERS_ROWS_HTML}}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="account-ledger__empty" aria-live="polite">
+      {{ORDERS_EMPTY_HTML}}
+    </div>
+  </div>
+</section>

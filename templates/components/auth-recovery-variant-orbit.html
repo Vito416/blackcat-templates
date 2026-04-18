@@ -1,0 +1,143 @@
+<section class="overflow-hidden rounded-[2.25rem] border border-sky-200/15 bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.18),transparent_30%),radial-gradient(circle_at_80%_80%,rgba(125,211,252,0.14),transparent_28%),linear-gradient(180deg,rgba(4,10,23,0.98),rgba(7,13,28,0.98))] text-slate-100 shadow-[0_30px_90px_rgba(2,8,23,0.6)]">
+  <div class="grid gap-0 lg:grid-cols-[0.88fr_1.12fr]">
+    <div class="relative overflow-hidden border-b border-white/8 p-6 md:p-8 lg:border-b-0 lg:border-r">
+      <div class="absolute inset-0">
+        <div class="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full border border-sky-200/15"></div>
+        <div class="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-300/15"></div>
+        <div class="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-300/20 blur-2xl"></div>
+      </div>
+
+      <div class="relative space-y-5">
+        <div class="inline-flex items-center gap-2 rounded-full border border-sky-200/20 bg-sky-200/10 px-3 py-1 text-[0.7rem] font-black uppercase tracking-[0.22em] text-sky-100">
+          Orbit Recovery
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-4xl font-black leading-tight text-white md:text-5xl">{{RECOVERY_TITLE}}</h2>
+          <p class="max-w-xl text-sm leading-6 text-slate-300 md:text-base">
+            A radial recovery block with a denser form rail and a clear email guard for shell-level composition.
+          </p>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex items-center gap-3 rounded-[1.35rem] border border-white/10 bg-white/5 p-4">
+            <span class="flex h-9 w-9 items-center justify-center rounded-full border border-sky-200/20 bg-sky-200/10 text-xs font-black text-sky-100">01</span>
+            <p class="text-sm text-slate-300">Submit the account email to trigger a reset flow.</p>
+          </div>
+          <div class="flex items-center gap-3 rounded-[1.35rem] border border-white/10 bg-white/5 p-4">
+            <span class="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-200/20 bg-cyan-200/10 text-xs font-black text-cyan-100">02</span>
+            <p class="text-sm text-slate-300">Watch the status region for instant validation feedback.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 md:p-8">
+      <form id="auth-recovery-orbit-form" action="{{RECOVERY_ACTION}}" method="{{RECOVERY_METHOD}}" class="rounded-[1.8rem] border border-white/10 bg-slate-950/60 p-5 md:p-6">
+        <div class="space-y-5">
+          <div class="rounded-[1.35rem] border border-sky-200/10 bg-sky-200/6 p-4">
+            <p class="text-xs font-black uppercase tracking-[0.18em] text-sky-100">Recovery email</p>
+            <p class="mt-2 text-sm text-slate-300">Use the inbox connected to your account. The field is validated inline before submit.</p>
+          </div>
+
+          <label class="block space-y-2">
+            <span class="text-xs font-black uppercase tracking-[0.18em] text-slate-300">Email address</span>
+            <input
+              id="auth-recovery-orbit-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              placeholder="name@domain.com"
+              class="w-full rounded-2xl border border-white/10 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-sky-300 focus:ring-2 focus:ring-sky-300/25"
+            />
+            <p id="auth-recovery-orbit-email-error" class="min-h-5 text-sm text-rose-200"></p>
+          </label>
+
+          <button
+            id="auth-recovery-orbit-submit"
+            type="submit"
+            class="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-sky-300 via-cyan-300 to-white px-4 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {{RECOVERY_CTA_LABEL}}
+          </button>
+
+          <div
+            id="auth-recovery-orbit-status"
+            class="min-h-12 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            Ready to send a recovery link.
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const form = document.getElementById("auth-recovery-orbit-form");
+  if (!form) return;
+
+  const email = document.getElementById("auth-recovery-orbit-email");
+  const submit = document.getElementById("auth-recovery-orbit-submit");
+  const status = document.getElementById("auth-recovery-orbit-status");
+  const emailError = document.getElementById("auth-recovery-orbit-email-error");
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setFieldState(field, errorNode, message) {
+    field.setAttribute("aria-invalid", message ? "true" : "false");
+    errorNode.textContent = message || "";
+  }
+
+  function setStatus(message, tone) {
+    status.textContent = message;
+    status.className = tone === "error"
+      ? "min-h-12 rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-rose-100"
+      : tone === "success"
+      ? "min-h-12 rounded-2xl border border-emerald-400/15 bg-emerald-400/8 px-4 py-3 text-sm text-emerald-100"
+      : "min-h-12 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200";
+  }
+
+  function validate() {
+    const value = email.value.trim();
+
+    if (!value) {
+      setFieldState(email, emailError, "Email is required.");
+      submit.disabled = true;
+      return false;
+    }
+
+    if (!emailPattern.test(value)) {
+      setFieldState(email, emailError, "Enter a valid email address.");
+      submit.disabled = true;
+      return false;
+    }
+
+    setFieldState(email, emailError, "");
+    submit.disabled = false;
+    return true;
+  }
+
+  ["input", "blur"].forEach((eventName) => {
+    email.addEventListener(eventName, validate);
+  });
+
+  form.addEventListener("submit", (event) => {
+    if (!validate()) {
+      event.preventDefault();
+      setStatus("Enter a valid email address to continue.", "error");
+      return;
+    }
+
+    submit.disabled = true;
+    submit.setAttribute("aria-busy", "true");
+    setStatus("Sending recovery instructions...", "success");
+  });
+
+  validate();
+})();
+</script>

@@ -1,0 +1,201 @@
+<section class="overflow-hidden rounded-[2.25rem] border border-cyan-300/15 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),transparent_36%),linear-gradient(180deg,rgba(8,15,28,0.98),rgba(5,10,20,0.98))] text-slate-100 shadow-[0_28px_90px_rgba(2,8,23,0.55)]">
+  <div class="grid gap-0 xl:grid-cols-[0.92fr_1.08fr]">
+    <aside class="relative border-b border-white/8 p-6 md:p-8 xl:border-b-0 xl:border-r">
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute left-4 top-6 h-40 w-40 rounded-full border border-cyan-300/20"></div>
+        <div class="absolute left-16 top-14 h-56 w-56 rounded-full border border-sky-200/10"></div>
+        <div class="absolute bottom-[-4rem] right-[-3rem] h-56 w-56 rounded-full bg-cyan-300/10 blur-3xl"></div>
+      </div>
+
+      <div class="relative space-y-6">
+        <div class="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-[0.7rem] font-black uppercase tracking-[0.22em] text-cyan-100">
+          Helix Register
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-4xl font-black leading-none text-white md:text-5xl">{{REGISTER_TITLE}}</h2>
+          <p class="max-w-xl text-sm leading-6 text-slate-300 md:text-base">
+            A lighter register block with a helix-style frame and inline field validation for fast shell composition.
+          </p>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div class="rounded-[1.35rem] border border-white/8 bg-white/5 p-4 backdrop-blur">
+            <p class="text-[0.7rem] font-black uppercase tracking-[0.18em] text-cyan-200">Tokenized</p>
+            <p class="mt-2 text-sm text-slate-300">Action, method, title, and CTA all stay placeholder-driven.</p>
+          </div>
+          <div class="rounded-[1.35rem] border border-white/8 bg-white/5 p-4 backdrop-blur">
+            <p class="text-[0.7rem] font-black uppercase tracking-[0.18em] text-sky-200">Validated</p>
+            <p class="mt-2 text-sm text-slate-300">Email, password strength, and confirmation match stay in sync.</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="p-6 md:p-8">
+      <form id="auth-register-helix-form" action="{{REGISTER_ACTION}}" method="{{REGISTER_METHOD}}" class="rounded-[1.75rem] border border-white/10 bg-slate-950/55 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] md:p-6">
+        <div class="space-y-5">
+          <div class="grid gap-4 md:grid-cols-2">
+            <label class="block space-y-2 md:col-span-2">
+              <span class="text-xs font-black uppercase tracking-[0.18em] text-slate-300">Email</span>
+              <input
+                id="auth-register-helix-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="name@domain.com"
+                class="w-full rounded-2xl border border-white/10 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/25"
+              />
+              <p id="auth-register-helix-email-error" class="min-h-5 text-sm text-rose-200"></p>
+            </label>
+
+            <label class="block space-y-2">
+              <span class="text-xs font-black uppercase tracking-[0.18em] text-slate-300">Password</span>
+              <input
+                id="auth-register-helix-password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+                placeholder="At least 8 characters"
+                class="w-full rounded-2xl border border-white/10 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/25"
+              />
+              <p id="auth-register-helix-password-error" class="min-h-5 text-sm text-rose-200"></p>
+            </label>
+
+            <label class="block space-y-2">
+              <span class="text-xs font-black uppercase tracking-[0.18em] text-slate-300">Confirm</span>
+              <input
+                id="auth-register-helix-confirm"
+                name="password_confirmation"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+                placeholder="Repeat password"
+                class="w-full rounded-2xl border border-white/10 bg-white px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/25"
+              />
+              <p id="auth-register-helix-confirm-error" class="min-h-5 text-sm text-rose-200"></p>
+            </label>
+          </div>
+
+          <div class="rounded-[1.35rem] border border-cyan-300/10 bg-cyan-300/8 p-4 text-sm text-cyan-50">
+            The helix shell keeps the registration path compact while still surfacing inline errors before submit.
+          </div>
+
+          <button
+            id="auth-register-helix-submit"
+            type="submit"
+            class="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-300 via-sky-300 to-teal-300 px-4 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {{REGISTER_CTA_LABEL}}
+          </button>
+
+          <div
+            id="auth-register-helix-status"
+            class="min-h-12 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            Ready to register.
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const form = document.getElementById("auth-register-helix-form");
+  if (!form) return;
+
+  const email = document.getElementById("auth-register-helix-email");
+  const password = document.getElementById("auth-register-helix-password");
+  const confirm = document.getElementById("auth-register-helix-confirm");
+  const submit = document.getElementById("auth-register-helix-submit");
+  const status = document.getElementById("auth-register-helix-status");
+  const emailError = document.getElementById("auth-register-helix-email-error");
+  const passwordError = document.getElementById("auth-register-helix-password-error");
+  const confirmError = document.getElementById("auth-register-helix-confirm-error");
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setFieldState(field, errorNode, message) {
+    field.setAttribute("aria-invalid", message ? "true" : "false");
+    errorNode.textContent = message || "";
+  }
+
+  function setStatus(message, tone) {
+    status.textContent = message;
+    status.className = tone === "error"
+      ? "min-h-12 rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-rose-100"
+      : tone === "success"
+      ? "min-h-12 rounded-2xl border border-emerald-400/15 bg-emerald-400/8 px-4 py-3 text-sm text-emerald-100"
+      : "min-h-12 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200";
+  }
+
+  function validate() {
+    let valid = true;
+    const emailValue = email.value.trim();
+    const passwordValue = password.value;
+    const confirmValue = confirm.value;
+
+    if (!emailValue) {
+      setFieldState(email, emailError, "Email is required.");
+      valid = false;
+    } else if (!emailPattern.test(emailValue)) {
+      setFieldState(email, emailError, "Enter a valid email address.");
+      valid = false;
+    } else {
+      setFieldState(email, emailError, "");
+    }
+
+    if (!passwordValue) {
+      setFieldState(password, passwordError, "Password is required.");
+      valid = false;
+    } else if (passwordValue.length < 8) {
+      setFieldState(password, passwordError, "Use at least 8 characters.");
+      valid = false;
+    } else {
+      setFieldState(password, passwordError, "");
+    }
+
+    if (!confirmValue) {
+      setFieldState(confirm, confirmError, "Confirm your password.");
+      valid = false;
+    } else if (confirmValue !== passwordValue) {
+      setFieldState(confirm, confirmError, "Passwords do not match.");
+      valid = false;
+    } else {
+      setFieldState(confirm, confirmError, "");
+    }
+
+    submit.disabled = !valid;
+    return valid;
+  }
+
+  ["input", "blur"].forEach((eventName) => {
+    email.addEventListener(eventName, validate);
+    password.addEventListener(eventName, validate);
+    confirm.addEventListener(eventName, validate);
+  });
+
+  form.addEventListener("submit", (event) => {
+    if (!validate()) {
+      event.preventDefault();
+      setStatus("Resolve the inline errors before submitting.", "error");
+      return;
+    }
+
+    submit.disabled = true;
+    submit.setAttribute("aria-busy", "true");
+    setStatus("Registering account...", "success");
+  });
+
+  validate();
+})();
+</script>

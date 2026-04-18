@@ -1,0 +1,197 @@
+<section class="overflow-hidden rounded-[2rem] border border-stone-200/15 bg-gradient-to-br from-slate-950 via-slate-900 to-stone-900 text-stone-100 shadow-[0_30px_80px_rgba(0,0,0,0.45)]">
+  <div class="grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
+    <div class="relative border-b border-stone-200/10 p-6 md:p-8 lg:border-b-0 lg:border-r">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(249,115,22,0.18),transparent_48%),radial-gradient(circle_at_bottom_right,rgba(15,118,110,0.18),transparent_42%)]"></div>
+      <div class="relative space-y-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="rounded-full border border-orange-300/30 bg-orange-300/10 px-3 py-1 text-[0.7rem] font-black uppercase tracking-[0.22em] text-orange-100">Foundry Register</span>
+          <span class="rounded-full border border-stone-200/15 bg-white/5 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-stone-300">Mesh-auth fragment</span>
+        </div>
+
+        <div class="space-y-3">
+          <h2 class="font-display text-4xl font-black leading-tight text-white md:text-5xl">{{REGISTER_TITLE}}</h2>
+          <p class="max-w-xl text-sm leading-6 text-stone-300 md:text-base">
+            Forge an account with the mesh console. This block stays self-contained so shells can mount it without pulling in page-level logic.
+          </p>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-3">
+          <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+            <p class="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-orange-200">Step 01</p>
+            <p class="mt-2 text-sm text-stone-300">Enter your email and create a new key.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+            <p class="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-teal-200">Step 02</p>
+            <p class="mt-2 text-sm text-stone-300">Confirm the password and clear the match check.</p>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-black/20 p-4">
+            <p class="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-stone-200">Step 03</p>
+            <p class="mt-2 text-sm text-stone-300">Submit when the register status turns green.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-6 md:p-8">
+      <form id="auth-register-foundry-form" action="{{REGISTER_ACTION}}" method="{{REGISTER_METHOD}}" class="space-y-4">
+        <div class="rounded-[1.5rem] border border-stone-200/10 bg-slate-950/70 p-5 shadow-inner shadow-black/20">
+          <div class="space-y-4">
+            <label class="block space-y-2">
+              <span class="text-xs font-bold uppercase tracking-[0.18em] text-stone-300">Email address</span>
+              <input
+                id="auth-register-foundry-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                placeholder="you@company.com"
+                class="w-full rounded-2xl border border-white/10 bg-white/95 px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-orange-300 focus:ring-2 focus:ring-orange-300/30"
+              />
+              <p id="auth-register-foundry-email-error" class="min-h-5 text-sm text-rose-200"></p>
+            </label>
+
+            <label class="block space-y-2">
+              <span class="text-xs font-bold uppercase tracking-[0.18em] text-stone-300">Password</span>
+              <input
+                id="auth-register-foundry-password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+                placeholder="Create a secure password"
+                class="w-full rounded-2xl border border-white/10 bg-white/95 px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-orange-300 focus:ring-2 focus:ring-orange-300/30"
+              />
+              <p id="auth-register-foundry-password-error" class="min-h-5 text-sm text-rose-200"></p>
+            </label>
+
+            <label class="block space-y-2">
+              <span class="text-xs font-bold uppercase tracking-[0.18em] text-stone-300">Confirm password</span>
+              <input
+                id="auth-register-foundry-confirm"
+                name="password_confirmation"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+                placeholder="Repeat the password"
+                class="w-full rounded-2xl border border-white/10 bg-white/95 px-4 py-3 text-slate-950 outline-none transition placeholder:text-slate-500 focus:border-orange-300 focus:ring-2 focus:ring-orange-300/30"
+              />
+              <p id="auth-register-foundry-confirm-error" class="min-h-5 text-sm text-rose-200"></p>
+            </label>
+
+            <button
+              id="auth-register-foundry-submit"
+              type="submit"
+              class="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-orange-400 to-amber-300 px-4 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {{REGISTER_CTA_LABEL}}
+            </button>
+
+            <div
+              id="auth-register-foundry-status"
+              class="min-h-12 rounded-2xl border border-emerald-400/15 bg-emerald-400/8 px-4 py-3 text-sm text-emerald-100"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              Ready to register.
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const form = document.getElementById("auth-register-foundry-form");
+  if (!form) return;
+
+  const email = document.getElementById("auth-register-foundry-email");
+  const password = document.getElementById("auth-register-foundry-password");
+  const confirm = document.getElementById("auth-register-foundry-confirm");
+  const submit = document.getElementById("auth-register-foundry-submit");
+  const status = document.getElementById("auth-register-foundry-status");
+  const emailError = document.getElementById("auth-register-foundry-email-error");
+  const passwordError = document.getElementById("auth-register-foundry-password-error");
+  const confirmError = document.getElementById("auth-register-foundry-confirm-error");
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setFieldState(field, errorNode, message) {
+    field.setAttribute("aria-invalid", message ? "true" : "false");
+    errorNode.textContent = message || "";
+  }
+
+  function setStatus(message, tone) {
+    status.textContent = message;
+    status.className = tone === "error"
+      ? "min-h-12 rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm text-rose-100"
+      : tone === "success"
+      ? "min-h-12 rounded-2xl border border-emerald-400/15 bg-emerald-400/8 px-4 py-3 text-sm text-emerald-100"
+      : "min-h-12 rounded-2xl border border-cyan-400/15 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100";
+  }
+
+  function validate() {
+    let valid = true;
+    const emailValue = email.value.trim();
+    const passwordValue = password.value;
+    const confirmValue = confirm.value;
+
+    if (!emailValue) {
+      setFieldState(email, emailError, "Email is required.");
+      valid = false;
+    } else if (!emailPattern.test(emailValue)) {
+      setFieldState(email, emailError, "Enter a valid email address.");
+      valid = false;
+    } else {
+      setFieldState(email, emailError, "");
+    }
+
+    if (!passwordValue) {
+      setFieldState(password, passwordError, "Password is required.");
+      valid = false;
+    } else if (passwordValue.length < 8) {
+      setFieldState(password, passwordError, "Use at least 8 characters.");
+      valid = false;
+    } else {
+      setFieldState(password, passwordError, "");
+    }
+
+    if (!confirmValue) {
+      setFieldState(confirm, confirmError, "Confirm your password.");
+      valid = false;
+    } else if (confirmValue !== passwordValue) {
+      setFieldState(confirm, confirmError, "Passwords do not match.");
+      valid = false;
+    } else {
+      setFieldState(confirm, confirmError, "");
+    }
+
+    submit.disabled = !valid;
+    return valid;
+  }
+
+  ["input", "blur"].forEach((eventName) => {
+    email.addEventListener(eventName, validate);
+    password.addEventListener(eventName, validate);
+    confirm.addEventListener(eventName, validate);
+  });
+
+  form.addEventListener("submit", (event) => {
+    if (!validate()) {
+      event.preventDefault();
+      setStatus("Check the highlighted fields before continuing.", "error");
+      return;
+    }
+
+    submit.disabled = true;
+    submit.setAttribute("aria-busy", "true");
+    setStatus("Registering account...", "success");
+  });
+
+  validate();
+})();
+</script>
