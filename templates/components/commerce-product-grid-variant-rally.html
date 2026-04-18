@@ -1,0 +1,20 @@
+<section class="rounded-[2rem] border border-rose-200/15 bg-zinc-950/70 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl md:p-7" aria-labelledby="commerce-product-grid-rally-title">
+  <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
+    <div class="max-w-2xl">
+      <p class="text-xs font-semibold uppercase tracking-[0.28em] text-rose-200/80">{{PRODUCT_GRID_EYEBROW}}</p>
+      <h2 id="commerce-product-grid-rally-title" class="mt-2 font-display text-3xl tracking-tight text-stone-50 md:text-4xl">{{PRODUCT_GRID_TITLE}}</h2>
+      <p class="mt-2 text-sm leading-6 text-stone-300">{{PRODUCT_GRID_LEAD}}</p>
+    </div>
+    <div class="rounded-full border border-rose-200/15 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-stone-200">
+      {{PRODUCT_GRID_META}}
+    </div>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" role="list" aria-live="polite">
+    {{PRODUCT_CARD_ITEMS_HTML}}
+  </div>
+
+  <div class="mt-4" aria-live="polite">
+    {{PRODUCT_GRID_EMPTY_STATE_HTML}}
+  </div>
+</section>

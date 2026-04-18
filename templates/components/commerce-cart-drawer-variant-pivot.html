@@ -1,0 +1,102 @@
+<div
+  class="pointer-events-none fixed inset-0 z-50"
+  data-cart-drawer
+  data-state="closed"
+  aria-hidden="true"
+>
+  <div
+    class="absolute inset-0 bg-zinc-950/70 opacity-0 transition-opacity duration-200 data-[state=open]:pointer-events-auto data-[state=open]:opacity-100"
+    data-cart-drawer-backdrop
+    data-cart-drawer-close
+    data-state="closed"
+    aria-hidden="true"
+  ></div>
+
+  <aside
+    class="absolute right-0 top-0 flex h-full w-full max-w-lg translate-x-full flex-col border-l border-white/10 bg-zinc-950 text-stone-50 shadow-[0_30px_90px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out data-[state=open]:pointer-events-auto data-[state=open]:translate-x-0"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="commerce-cart-drawer-title"
+    tabindex="-1"
+    data-cart-drawer-panel
+    data-state="closed"
+  >
+    <header class="flex items-start justify-between gap-4 border-b border-white/10 px-5 py-4 md:px-6">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-rose-200/80">{{CART_DRAWER_EYEBROW}}</p>
+        <h2 id="commerce-cart-drawer-title" class="mt-2 font-display text-2xl tracking-tight">{{CART_DRAWER_TITLE}}</h2>
+      </div>
+      <button
+        type="button"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-stone-100 transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-rose-200/70"
+        aria-label="{{CART_DRAWER_CLOSE_LABEL}}"
+        data-cart-drawer-close
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <div class="flex-1 overflow-y-auto px-5 py-4 md:px-6">
+      {{CART_DRAWER_ITEMS_HTML}}
+    </div>
+
+    <footer class="border-t border-white/10 px-5 py-4 md:px-6">
+      {{CART_DRAWER_FOOTER_HTML}}
+    </footer>
+  </aside>
+</div>
+
+<script>
+  (() => {
+    const drawer = document.querySelector('[data-cart-drawer]');
+    if (!drawer) return;
+
+    const backdrop = drawer.querySelector('[data-cart-drawer-backdrop]');
+    const panel = drawer.querySelector('[data-cart-drawer-panel]');
+    const openers = document.querySelectorAll('[data-cart-drawer-open]');
+    const closers = drawer.querySelectorAll('[data-cart-drawer-close]');
+    let lastTrigger = null;
+
+    const setState = (isOpen) => {
+      drawer.dataset.state = isOpen ? 'open' : 'closed';
+      if (backdrop) backdrop.dataset.state = isOpen ? 'open' : 'closed';
+      if (panel) panel.dataset.state = isOpen ? 'open' : 'closed';
+      drawer.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      drawer.classList.toggle('pointer-events-none', !isOpen);
+      document.documentElement.classList.toggle('overflow-hidden', isOpen);
+      panel?.setAttribute('tabindex', '-1');
+      if (isOpen) {
+        requestAnimationFrame(() => panel?.focus());
+      } else if (lastTrigger && typeof lastTrigger.focus === 'function') {
+        lastTrigger.focus();
+      }
+    };
+
+    const open = (trigger) => {
+      lastTrigger = trigger || document.activeElement;
+      setState(true);
+    };
+
+    const close = () => setState(false);
+
+    openers.forEach((trigger) => {
+      trigger.addEventListener('click', () => open(trigger));
+    });
+
+    closers.forEach((trigger) => {
+      trigger.addEventListener('click', close);
+    });
+
+    drawer.addEventListener('click', (event) => {
+      if (event.target === drawer || (event.target instanceof Element && event.target.hasAttribute('data-cart-drawer-backdrop'))) {
+        close();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && drawer.dataset.state === 'open') {
+        close();
+      }
+    });
+  })();
+</script>

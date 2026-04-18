@@ -1,0 +1,108 @@
+<section class="rounded-[1.75rem] border border-white/10 bg-zinc-950/75 p-5 text-stone-50 shadow-[0_20px_70px_rgba(0,0,0,0.4)] backdrop-blur-xl md:p-6" aria-labelledby="commerce-checkout-summary-title">
+  <div class="mb-5">
+    <p class="text-xs font-semibold uppercase tracking-[0.28em] text-rose-200/80">{{CHECKOUT_SUMMARY_EYEBROW}}</p>
+    <h2 id="commerce-checkout-summary-title" class="mt-2 font-display text-2xl tracking-tight">{{CHECKOUT_SUMMARY_TITLE}}</h2>
+    <p class="mt-2 text-sm leading-6 text-stone-300">{{CHECKOUT_SUMMARY_LEAD}}</p>
+  </div>
+
+  <form class="space-y-4" data-checkout-coupon-form novalidate>
+    <fieldset class="space-y-3">
+      <legend class="sr-only">{{COUPON_FIELD_LABEL}}</legend>
+      <label class="block text-sm font-medium text-stone-200" for="checkout-coupon-code">{{COUPON_FIELD_LABEL}}</label>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <input
+          id="checkout-coupon-code"
+          name="coupon"
+          type="text"
+          inputmode="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="{{COUPON_FIELD_PLACEHOLDER}}"
+          class="min-w-0 flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-stone-50 outline-none transition placeholder:text-stone-500 focus:border-rose-200/60 focus:ring-2 focus:ring-rose-200/20"
+          aria-describedby="checkout-coupon-help checkout-coupon-message"
+          data-coupon-input
+          pattern="[A-Za-z0-9][A-Za-z0-9_-]{2,31}"
+          maxlength="32"
+        />
+        <button
+          type="submit"
+          class="inline-flex items-center justify-center rounded-2xl border border-rose-200/30 bg-rose-200/10 px-4 py-3 text-sm font-semibold text-rose-50 transition hover:bg-rose-200/15 focus:outline-none focus:ring-2 focus:ring-rose-200/60"
+          data-coupon-apply
+        >
+          {{COUPON_SUBMIT_LABEL}}
+        </button>
+      </div>
+      <p id="checkout-coupon-help" class="text-xs leading-5 text-stone-400">{{COUPON_FIELD_HELP}}</p>
+      <p id="checkout-coupon-message" class="min-h-5 text-sm text-rose-200" role="status" aria-live="polite" data-coupon-message></p>
+    </fieldset>
+  </form>
+
+  <div class="mt-6 space-y-4">
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+      {{CHECKOUT_TOTAL_ROWS_HTML}}
+    </div>
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+      {{CHECKOUT_TOTALS_HTML}}
+    </div>
+  </div>
+</section>
+
+<script>
+  (() => {
+    const form = document.querySelector('[data-checkout-coupon-form]');
+    const input = form?.querySelector('[data-coupon-input]');
+    const message = form?.querySelector('[data-coupon-message]');
+    if (!form || !input || !message) return;
+
+    const couponPattern = /^[A-Za-z0-9][A-Za-z0-9_-]{2,31}$/;
+
+    const setMessage = (text, isError = true) => {
+      message.textContent = text;
+      message.classList.toggle('text-rose-200', isError);
+      message.classList.toggle('text-emerald-200', !isError);
+    };
+
+    const validate = () => {
+      const code = input.value.trim();
+      input.value = code;
+
+      if (!code) {
+        input.setCustomValidity('{{COUPON_EMPTY_ERROR}}');
+        setMessage('{{COUPON_EMPTY_ERROR}}');
+        return false;
+      }
+
+      if (!couponPattern.test(code)) {
+        input.setCustomValidity('{{COUPON_FORMAT_ERROR}}');
+        setMessage('{{COUPON_FORMAT_ERROR}}');
+        return false;
+      }
+
+      input.setCustomValidity('');
+      setMessage('{{COUPON_READY_MESSAGE}}', false);
+      return true;
+    };
+
+    input.addEventListener('input', () => {
+      if (input.validationMessage) {
+        validate();
+      } else {
+        message.textContent = '';
+      }
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!validate()) {
+        input.reportValidity();
+        input.focus();
+        return;
+      }
+
+      form.dispatchEvent(new CustomEvent('checkout-summary:coupon-apply', {
+        bubbles: true,
+        detail: { code: input.value.trim() },
+      }));
+    });
+  })();
+</script>
