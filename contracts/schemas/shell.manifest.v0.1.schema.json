@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blackcat.darkmesh/schemas/shell.manifest.v0.1.schema.json",
+  "title": "BlackCat Shell Manifest v0.1",
+  "type": "object",
+  "required": ["schema", "shellId", "version", "slots", "rules"],
+  "properties": {
+    "schema": { "const": "blackcat.shell.manifest.v0.1" },
+    "shellId": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "accepts"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "accepts": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "rules": {
+      "type": "object",
+      "required": ["requireAllSlots"],
+      "properties": {
+        "requireAllSlots": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

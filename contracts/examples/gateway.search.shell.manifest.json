@@ -1,0 +1,14 @@
+{
+  "schema": "blackcat.shell.manifest.v0.1",
+  "shellId": "gateway.search.shell",
+  "version": "0.1.0",
+  "slots": [
+    { "id": "menu", "accepts": ["nav.menu"] },
+    { "id": "hero", "accepts": ["search.hero"] },
+    { "id": "results", "accepts": ["search.results"] },
+    { "id": "footer", "accepts": ["footer.global"] }
+  ],
+  "rules": {
+    "requireAllSlots": true
+  }
+}

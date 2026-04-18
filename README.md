@@ -3,10 +3,17 @@
 Template registry and CLI for public, verifiable assets used by the Blackcat Darkmesh ecosystem.
 This repo now includes:
 - docs/scaffolding templates (`module_readme`, `module_roadmap`)
-- gateway search UX templates with three distinct variants:
+- gateway search UX templates with three distinct monolithic variants:
   - `gateway_search_variant_signal`
   - `gateway_search_variant_bastion`
   - `gateway_search_variant_horizon`
+- gateway search **component kit** (front-end building blocks):
+  - `gateway_search_shell_core` (page skeleton)
+  - menu/search/results/footer fragments in three original styles (`pulse`, `atlas`, `lumen`)
+  - `gateway:compose` command that assembles shell + selected style profile
+- block-spec scaffolding for TS/JS frontend logic:
+  - `contracts/schemas/*.v0.1.schema.json`
+  - `contracts/examples/*.json`
 
 ## What this repo is for
 - Keep template bundles outside gateway runtime code.
@@ -26,6 +33,9 @@ php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG templat
 
 # Render one gateway-search variant
 php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run gateway_search_variant_bastion '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/gateway-search-bastion.html
+
+# Compose a chunked front-end page (shell + fragments)
+php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG gateway:compose pulse '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/gateway-search-pulse.html
 
 # Security checks
 php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG security:scan
@@ -48,7 +58,16 @@ Smoke test boots registry, renders templates, runs security scan, and verifies m
 
 ## Gateway search release docs
 - Runbook: `docs/GATEWAY_SEARCH_RELEASE.md`
+- Component kit guide: `docs/GATEWAY_COMPONENT_KIT.md`
+- Block spec v0.1: `docs/BLOCK_SPEC_V0_1.md`
 - Variant map example: `docs/gateway-search-variant-map.example.json`
+
+## Component-kit model (project default)
+- Templates are split into reusable parts (`menu`, `search`, `results`, `footer`) rather than one big page.
+- The shell stays stable; styles swap per component profile.
+- Gateway keeps templates public/deterministic and can cache them safely.
+- This lets each site compose unique UX while preserving the same verified runtime flow.
+- Frontend logic stays in TS/JS bundles per block (state-machine oriented), while signing/secrets stay worker-side.
 
 ## Licensing
 

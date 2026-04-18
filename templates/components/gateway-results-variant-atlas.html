@@ -1,0 +1,26 @@
+<section class="border-4 border-black bg-orange-200 p-4 text-black shadow-[12px_12px_0_0_rgba(0,0,0,0.85)] md:p-6">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="font-display text-3xl font-black uppercase leading-none">Indexed Pages</h2>
+      <p class="text-xs font-black uppercase tracking-[0.2em]">{{INDEX_MODE_LABEL}}</p>
+    </div>
+    <button
+      id="gateway-reshuffle"
+      type="button"
+      class="border-2 border-black bg-black px-3 py-2 text-xs font-black uppercase tracking-[0.14em] text-orange-100 transition hover:bg-transparent hover:text-black"
+    >
+      Reshuffle
+    </button>
+  </div>
+  <ul id="gateway-results-list" class="grid gap-3 md:grid-cols-2"></ul>
+
+  <template id="gateway-result-item-template">
+    <li class="border-2 border-black bg-white p-4">
+      <button type="button" data-result-query class="w-full text-left">
+        <strong data-result-title class="block text-base font-black uppercase"></strong>
+        <span data-result-meta class="mt-1 block text-xs font-semibold uppercase"></span>
+      </button>
+      <a data-result-link target="_blank" rel="noreferrer noopener" class="mt-2 inline-flex text-xs font-black uppercase tracking-[0.12em] underline">Open</a>
+    </li>
+  </template>
+</section>

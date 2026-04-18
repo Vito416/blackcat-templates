@@ -10,12 +10,22 @@
 - Added placeholders required for universal gateway routing (`SITE_TITLE`, `GATEWAY_ORIGIN`, `SEARCH_ACTION`).
 - Kept templates stateless and secret-free so bundles can be published to Arweave.
 
-## Stage 3 – Release Automation (next)
+## Stage 3 – Componentized Front-End Kit ✅
+- Added composable shell `gateway_search_shell_core`.
+- Added chunked fragments for `menu`, `search`, `results`, `footer` in three original styles (`pulse`, `atlas`, `lumen`).
+- Added `gateway:compose` CLI flow to assemble full pages from fragments while keeping deterministic render output.
+
+## Stage 4 – Block Spec Scaffolding ✅
+- Added v0.1 schemas for `block.manifest`, `block.variant`, `shell.manifest`, and `page.composition`.
+- Added example payloads for `auth.login` and gateway search shell composition.
+- Locked the direction to TS/JS frontend-logic blocks with worker-only secret/sign boundaries.
+
+## Stage 5 – Release Automation (next)
 - Add template release manifest generation (`variant -> txid/hash`) for gateway operators.
 - Add CI checks that rendered bundles remain deterministic across runs.
 - Add schema validation for template release metadata consumed by gateway config.
 
-## Stage 4 – Template Marketplace Readiness (next)
+## Stage 6 – Template Marketplace Readiness (next)
 - Add formal template metadata (compatibility matrix, required gateway minimum version).
 - Add release notes/changelog per template variant.
 - Add starter snippets for `blackcat-darkmesh-web` builder integration.

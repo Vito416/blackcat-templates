@@ -1,0 +1,34 @@
+{
+  "schema": "blackcat.page.composition.v0.1",
+  "siteId": "site-alpha",
+  "pageId": "home",
+  "version": "2026-04-18.1",
+  "shellRef": {
+    "txId": "AR_TX_SHELL",
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "blocks": [
+    {
+      "instanceId": "menu-1",
+      "slot": "menu",
+      "blockRef": {
+        "blockId": "nav.menu",
+        "version": "0.1.0",
+        "txId": "AR_TX_MENU_BLOCK",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "variantRef": {
+        "variantId": "forge",
+        "txId": "AR_TX_MENU_VARIANT",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "propsRef": {
+        "txId": "AR_TX_MENU_PROPS",
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      }
+    }
+  ],
+  "integrity": {
+    "compositionSha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  }
+}

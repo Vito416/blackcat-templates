@@ -1,0 +1,28 @@
+<section class="grid gap-6 rounded-[2rem] border border-slate-300/35 bg-white/90 p-5 text-slate-900 shadow-mesh md:grid-cols-[1.2fr_1fr] md:p-7">
+  <div class="space-y-4">
+    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Public Catalog Surface</p>
+    <h1 class="font-serif text-5xl italic leading-[0.95] md:text-6xl">{{SITE_TITLE}}</h1>
+    <p class="max-w-2xl text-slate-600">{{SITE_TAGLINE}}</p>
+  </div>
+
+  <div class="space-y-3">
+    <form id="gateway-search-form" class="grid gap-3">
+      <input
+        id="gateway-search-input"
+        name="query"
+        type="search"
+        required
+        autocomplete="off"
+        placeholder="{{SEARCH_PLACEHOLDER}}"
+        class="rounded-full border border-slate-400/70 bg-white px-5 py-3 text-slate-900 outline-none ring-indigo-400/65 transition focus:ring"
+      />
+      <button
+        type="submit"
+        class="rounded-full border border-slate-900 bg-slate-900 px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-transparent hover:text-slate-900"
+      >
+        Resolve Route
+      </button>
+    </form>
+    <div id="gateway-search-status" class="rounded-2xl border border-sky-300/45 bg-sky-400/10 p-3 text-sm text-sky-900">Ready for lookup.</div>
+  </div>
+</section>

@@ -4,179 +4,259 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{SITE_TITLE}}</title>
-    <style>
-      :root {
-        color-scheme: light;
-        --paper: #f7f4ee;
-        --ink: #1f2a37;
-        --muted: #5c6b7a;
-        --accent: #115e59;
-        --line: #c8c6bf;
-        --ok: #0f766e;
-        --error: #b91c1c;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: "Fraunces", Georgia, serif;
-        color: var(--ink);
-        background:
-          linear-gradient(180deg, rgba(17, 94, 89, 0.07), rgba(17, 94, 89, 0)),
-          var(--paper);
-        display: grid;
-        place-items: center;
-        padding: 24px;
-      }
-
-      article {
-        width: min(760px, 100%);
-        background: rgba(255, 255, 255, 0.7);
-        border: 1px solid var(--line);
-        border-radius: 16px;
-        padding: 30px;
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(1.8rem, 4.8vw, 2.8rem);
-        line-height: 1.08;
-      }
-
-      .tagline {
-        margin-top: 8px;
-        color: var(--muted);
-        font-family: "Inter", "Segoe UI", sans-serif;
-      }
-
-      .search {
-        margin-top: 22px;
-        padding-top: 18px;
-        border-top: 1px solid var(--line);
-      }
-
-      label {
-        display: block;
-        margin-bottom: 8px;
-        font-family: "Inter", "Segoe UI", sans-serif;
-        font-size: 0.86rem;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-      }
-
-      .row {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 8px;
-      }
-
-      input,
-      button {
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 12px 14px;
-        font-size: 1rem;
-      }
-
-      input {
-        background: #fff;
-      }
-
-      button {
-        background: var(--accent);
-        color: #fff;
-        border-color: var(--accent);
-        cursor: pointer;
-        font-weight: 600;
-      }
-
-      .result {
-        margin-top: 16px;
-        font-family: "Inter", "Segoe UI", sans-serif;
-        font-size: 0.95rem;
-        color: var(--muted);
-        min-height: 24px;
-        overflow-wrap: anywhere;
-      }
-
-      .result.ok {
-        color: var(--ok);
-      }
-
-      .result.error {
-        color: var(--error);
-      }
-
-      @media (max-width: 680px) {
-        article {
-          padding: 22px;
-        }
-
-        .row {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              title: ['"Fraunces"', "ui-serif", "Georgia"],
+              body: ['"Inter"', "ui-sans-serif", "system-ui"],
+            },
+            colors: {
+              horizon: {
+                paper: "#f6f2e8",
+                ink: "#1f2937",
+                pine: "#0f766e",
+              },
+            },
+          },
+        },
+      };
+    </script>
   </head>
-  <body>
-    <article>
-      <h1>{{SITE_TITLE}}</h1>
-      <p class="tagline">{{SITE_TAGLINE}}</p>
-      <section class="search">
-        <label for="query">Search the mesh</label>
-        <form id="search-form" class="row">
-          <input id="query" name="query" type="search" placeholder="Try route:/about or page:contact" required />
-          <button type="submit">Resolve</button>
-        </form>
-        <div id="result" class="result" aria-live="polite"></div>
-      </section>
-    </article>
+  <body class="min-h-screen bg-horizon-paper font-body text-horizon-ink">
+    <div class="min-h-screen bg-[linear-gradient(180deg,rgba(15,118,110,0.09),rgba(15,118,110,0.01)_30%,transparent)] px-4 py-6 md:px-10 md:py-10">
+      <main class="mx-auto grid max-w-6xl gap-6 rounded-3xl border border-emerald-900/20 bg-white/80 p-6 shadow-xl md:grid-cols-[1.2fr_1fr] md:p-8">
+        <section class="space-y-5">
+          <header class="space-y-2">
+            <p class="text-xs uppercase tracking-[0.17em] text-emerald-800/80">Public Mesh Directory</p>
+            <h1 class="font-title text-4xl leading-tight md:text-5xl">{{SITE_TITLE}}</h1>
+            <p class="text-slate-600">{{SITE_TAGLINE}}</p>
+            <p class="text-xs uppercase tracking-[0.18em] text-slate-500">{{INDEX_MODE_LABEL}}</p>
+          </header>
 
+          <form id="search-form" class="grid gap-3 md:grid-cols-[1fr_auto]">
+            <input
+              id="query"
+              name="query"
+              type="search"
+              required
+              placeholder="{{SEARCH_PLACEHOLDER}}"
+              class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none ring-emerald-500/50 transition focus:ring"
+            />
+            <button
+              type="submit"
+              class="rounded-xl bg-horizon-pine px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-white transition hover:brightness-105"
+            >
+              Resolve
+            </button>
+          </form>
+
+          <div id="search-result" class="min-h-[2.5rem] rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-700" aria-live="polite">
+            Ready.
+          </div>
+        </section>
+
+        <aside class="rounded-2xl border border-slate-300 bg-white/95 p-4">
+          <div class="mb-3 flex items-center justify-between gap-3">
+            <h2 class="font-title text-2xl">Indexed Pages</h2>
+            <button
+              id="reshuffle"
+              type="button"
+              class="rounded-lg border border-slate-300 px-3 py-1 text-xs uppercase tracking-[0.16em] text-slate-700 transition hover:border-emerald-500 hover:text-emerald-700"
+            >
+              Reshuffle
+            </button>
+          </div>
+          <ul id="index-list" class="max-h-[26rem] space-y-2 overflow-auto pr-1"></ul>
+        </aside>
+      </main>
+    </div>
+
+    <script id="seed-index" type="application/json">{{INDEX_SEED_JSON}}</script>
     <script>
       (function () {
-        const gatewayOrigin = "{{GATEWAY_ORIGIN}}";
-        const action = "{{SEARCH_ACTION}}";
+        const gatewayOrigin = String("{{GATEWAY_ORIGIN}}" || "").replace(/\/+$/, "");
+        const searchAction = "{{SEARCH_ACTION}}";
+        const indexAction = String("{{INDEX_ACTION}}" || "").trim();
+        const indexLimit = Math.max(1, Number.parseInt("{{INDEX_LIMIT}}", 10) || 120);
+
         const form = document.getElementById("search-form");
         const queryInput = document.getElementById("query");
-        const result = document.getElementById("result");
+        const resultNode = document.getElementById("search-result");
+        const listNode = document.getElementById("index-list");
+        const reshuffleButton = document.getElementById("reshuffle");
 
-        form.addEventListener("submit", async function (event) {
-          event.preventDefault();
-          const query = (queryInput.value || "").trim();
-          if (!query) {
-            result.className = "result error";
-            result.textContent = "Please type something first.";
+        function draw(max) {
+          if (max <= 0) return 0;
+          if (window.crypto && typeof window.crypto.getRandomValues === "function") {
+            const buf = new Uint32Array(1);
+            window.crypto.getRandomValues(buf);
+            return buf[0] % max;
+          }
+          return Math.floor(Math.random() * max);
+        }
+
+        function shuffle(values) {
+          const arr = values.slice();
+          for (let i = arr.length - 1; i > 0; i -= 1) {
+            const j = draw(i + 1);
+            const tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+          }
+          return arr;
+        }
+
+        function safeJson(text, fallback) {
+          try {
+            return JSON.parse(text);
+          } catch (_err) {
+            return fallback;
+          }
+        }
+
+        function normalize(item) {
+          if (!item || typeof item !== "object") return null;
+          const siteId = String(item.siteId || item["Site-Id"] || item.id || "").trim();
+          const title = String(item.title || item.name || item.host || siteId || "").trim();
+          const host = String(item.host || item.domain || "").trim();
+          const path = String(item.path || item.route || "/").trim() || "/";
+          const url = String(item.url || "").trim() || (host ? "https://" + host + (path.startsWith("/") ? path : "/" + path) : "");
+          const query = String(item.query || host || path || siteId).trim();
+          if (!title || !query) return null;
+          return { siteId, title, host, path, url, query };
+        }
+
+        function setResult(text, kind) {
+          if (kind === "ok") {
+            resultNode.className = "min-h-[2.5rem] rounded-xl border border-emerald-400 bg-emerald-50 p-3 text-sm text-emerald-900";
+          } else if (kind === "error") {
+            resultNode.className = "min-h-[2.5rem] rounded-xl border border-rose-400 bg-rose-50 p-3 text-sm text-rose-900";
+          } else {
+            resultNode.className = "min-h-[2.5rem] rounded-xl border border-slate-300 bg-white p-3 text-sm text-slate-700";
+          }
+          resultNode.textContent = text;
+        }
+
+        function renderIndex(entries) {
+          listNode.innerHTML = "";
+          if (!entries.length) {
+            const li = document.createElement("li");
+            li.className = "rounded-xl border border-slate-300 bg-slate-50 p-3 text-sm text-slate-500";
+            li.textContent = "No indexed pages available.";
+            listNode.appendChild(li);
             return;
           }
 
-          result.className = "result";
-          result.textContent = "Checking route information...";
+          entries.forEach(function (entry) {
+            const li = document.createElement("li");
+            li.className = "rounded-xl border border-slate-300 bg-white p-3";
+
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "w-full text-left";
+            button.innerHTML =
+              '<span class="block font-semibold text-slate-900">' +
+              entry.title +
+              "</span>" +
+              '<span class="mt-1 block text-xs text-slate-500">' +
+              (entry.host || "site") +
+              " " +
+              (entry.path || "/") +
+              "</span>";
+            button.addEventListener("click", function () {
+              queryInput.value = entry.query;
+              queryInput.focus();
+            });
+            li.appendChild(button);
+
+            if (entry.url) {
+              const link = document.createElement("a");
+              link.href = entry.url;
+              link.target = "_blank";
+              link.rel = "noreferrer noopener";
+              link.className = "mt-2 inline-block text-xs uppercase tracking-[0.12em] text-emerald-700";
+              link.textContent = "Open";
+              li.appendChild(link);
+            }
+
+            listNode.appendChild(li);
+          });
+        }
+
+        async function loadIndex() {
+          const seedRaw = document.getElementById("seed-index");
+          const seedList = Array.isArray(safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", []))
+            ? safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", [])
+            : [];
+          const seedNormalized = seedList.map(normalize).filter(Boolean);
+          if (!indexAction || !gatewayOrigin) {
+            renderIndex(shuffle(seedNormalized));
+            return;
+          }
 
           try {
             const response = await fetch(gatewayOrigin + "/template/call", {
               method: "POST",
               headers: { "content-type": "application/json" },
               body: JSON.stringify({
-                action,
-                payload: { query, source: "horizon" },
+                action: indexAction,
+                payload: { limit: indexLimit },
+              }),
+            });
+            const data = await response.json().catch(function () { return {}; });
+            if (!response.ok) {
+              throw new Error((data && (data.error || data.code)) || "index_fetch_failed");
+            }
+            const rawItems = data.items || (data.data && data.data.items) || data.sites || [];
+            const normalized = Array.isArray(rawItems) ? rawItems.map(normalize).filter(Boolean) : [];
+            renderIndex(shuffle(normalized.length ? normalized : seedNormalized));
+          } catch (_err) {
+            renderIndex(shuffle(seedNormalized));
+          }
+        }
+
+        async function submitSearch(event) {
+          event.preventDefault();
+          const query = String(queryInput.value || "").trim();
+          if (!query) {
+            setResult("Please type something first.", "error");
+            return;
+          }
+
+          setResult("Checking route information ...", "info");
+          try {
+            const response = await fetch(gatewayOrigin + "/template/call", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                action: searchAction,
+                payload: { query, path: query, host: query },
               }),
             });
             const data = await response.json().catch(function () { return null; });
             if (!response.ok) {
-              throw new Error((data && data.error) || "request_failed");
+              throw new Error((data && (data.error || data.code)) || "request_failed");
             }
-            result.className = "result ok";
-            result.textContent = "Resolved route: " + JSON.stringify(data);
+            setResult("Resolved route: " + JSON.stringify(data), "ok");
           } catch (error) {
-            result.className = "result error";
-            result.textContent = "Unable to resolve route: " + (error && error.message ? error.message : String(error));
+            setResult("Unable to resolve route: " + (error && error.message ? error.message : String(error)), "error");
           }
+        }
+
+        form.addEventListener("submit", submitSearch);
+        reshuffleButton.addEventListener("click", function () {
+          const cards = Array.from(listNode.children);
+          const shuffled = shuffle(cards);
+          listNode.innerHTML = "";
+          shuffled.forEach(function (node) {
+            listNode.appendChild(node);
+          });
         });
+
+        loadIndex();
       })();
     </script>
   </body>

@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{SITE_TITLE}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ["'Sora'", "ui-sans-serif", "system-ui"],
+              body: ["'Manrope'", "ui-sans-serif", "system-ui"],
+              serif: ["'Cormorant Garamond'", "ui-serif", "Georgia"],
+            },
+            boxShadow: {
+              mesh: "0 30px 90px rgba(8, 11, 30, 0.45)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --mesh-bg-1: #070b1f;
+        --mesh-bg-2: #111d48;
+        --mesh-fx-a: rgba(66, 133, 244, 0.33);
+        --mesh-fx-b: rgba(48, 227, 202, 0.25);
+      }
+
+      body {
+        background: linear-gradient(130deg, var(--mesh-bg-1), var(--mesh-bg-2));
+      }
+
+      .mesh-fx::before,
+      .mesh-fx::after {
+        content: "";
+        position: absolute;
+        inset: auto;
+        width: 38vmax;
+        height: 38vmax;
+        border-radius: 9999px;
+        filter: blur(28px);
+        opacity: 0.65;
+        z-index: 0;
+        animation: drift 16s ease-in-out infinite;
+      }
+
+      .mesh-fx::before {
+        top: -16vmax;
+        left: -12vmax;
+        background: var(--mesh-fx-a);
+      }
+
+      .mesh-fx::after {
+        right: -12vmax;
+        bottom: -20vmax;
+        background: var(--mesh-fx-b);
+        animation-delay: -7s;
+      }
+
+      @keyframes drift {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+        50% {
+          transform: translate3d(0, -18px, 0) scale(1.05);
+        }
+      }
+
+      {{SHELL_EXTRA_CSS}}
+    </style>
+  </head>
+  <body class="min-h-screen overflow-x-hidden font-body text-slate-100">
+    <div class="mesh-fx relative min-h-screen px-4 py-6 md:px-8 md:py-10 {{SHELL_BODY_CLASS}}">
+      <div class="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-6">
+        <div data-slot="menu">{{MENU_COMPONENT}}</div>
+        <div data-slot="search">{{SEARCH_COMPONENT}}</div>
+        <div data-slot="results">{{RESULTS_COMPONENT}}</div>
+        <div data-slot="footer">{{FOOTER_COMPONENT}}</div>
+      </div>
+    </div>
+
+    <script id="gateway-seed-index" type="application/json">{{INDEX_SEED_JSON}}</script>
+    <script>
+      (function () {
+        const gatewayOrigin = String("{{GATEWAY_ORIGIN}}" || "").replace(/\/+$/, "");
+        const searchAction = "{{SEARCH_ACTION}}";
+        const indexAction = String("{{INDEX_ACTION}}" || "").trim();
+        const indexLimit = Math.max(1, Number.parseInt("{{INDEX_LIMIT}}", 10) || 120);
+
+        const form = document.getElementById("gateway-search-form");
+        const input = document.getElementById("gateway-search-input");
+        const statusNode = document.getElementById("gateway-search-status");
+        const listNode = document.getElementById("gateway-results-list");
+        const reshuffleButton = document.getElementById("gateway-reshuffle");
+        const itemTemplate = document.getElementById("gateway-result-item-template");
+
+        let currentEntries = [];
+
+        if (!form || !input || !statusNode || !listNode || !itemTemplate) {
+          return;
+        }
+
+        function draw(max) {
+          if (max <= 0) return 0;
+          if (window.crypto && typeof window.crypto.getRandomValues === "function") {
+            const bucket = new Uint32Array(1);
+            window.crypto.getRandomValues(bucket);
+            return bucket[0] % max;
+          }
+          return Math.floor(Math.random() * max);
+        }
+
+        function shuffle(values) {
+          const out = values.slice();
+          for (let idx = out.length - 1; idx > 0; idx -= 1) {
+            const other = draw(idx + 1);
+            const hold = out[idx];
+            out[idx] = out[other];
+            out[other] = hold;
+          }
+          return out;
+        }
+
+        function safeJson(raw, fallback) {
+          try {
+            return JSON.parse(raw);
+          } catch (_err) {
+            return fallback;
+          }
+        }
+
+        function normalize(item) {
+          if (!item || typeof item !== "object") return null;
+          const siteId = String(item.siteId || item["Site-Id"] || item.id || "").trim();
+          const title = String(item.title || item.name || item.host || siteId || "").trim();
+          const host = String(item.host || item.domain || "").trim();
+          const path = String(item.path || item.route || "/").trim() || "/";
+          const url = String(item.url || "").trim() || (host ? "https://" + host + (path.startsWith("/") ? path : "/" + path) : "");
+          const query = String(item.query || host || path || siteId).trim();
+          if (!title || !query) return null;
+          return { siteId, title, host, path, url, query };
+        }
+
+        function setStatus(message, tone) {
+          statusNode.textContent = message;
+          const classes = {
+            ok: "border-emerald-300/45 bg-emerald-400/10 text-emerald-100",
+            error: "border-rose-300/45 bg-rose-400/10 text-rose-100",
+            info: "border-sky-300/45 bg-sky-400/10 text-sky-100",
+          };
+          statusNode.classList.remove(
+            "border-emerald-300/45",
+            "bg-emerald-400/10",
+            "text-emerald-100",
+            "border-rose-300/45",
+            "bg-rose-400/10",
+            "text-rose-100",
+            "border-sky-300/45",
+            "bg-sky-400/10",
+            "text-sky-100"
+          );
+          const target = classes[tone] || classes.info;
+          target.split(" ").forEach((klass) => statusNode.classList.add(klass));
+        }
+
+        function renderItems(entries) {
+          listNode.innerHTML = "";
+          if (!entries.length) {
+            const emptyNode = document.createElement("li");
+            emptyNode.className = "rounded-2xl border border-white/15 bg-white/5 p-4 text-sm text-slate-300";
+            emptyNode.textContent = "No public pages available yet.";
+            listNode.appendChild(emptyNode);
+            return;
+          }
+
+          entries.forEach((entry) => {
+            const fragment = itemTemplate.content.cloneNode(true);
+            const button = fragment.querySelector("[data-result-query]");
+            const title = fragment.querySelector("[data-result-title]");
+            const meta = fragment.querySelector("[data-result-meta]");
+            const link = fragment.querySelector("[data-result-link]");
+
+            if (title) title.textContent = entry.title;
+            if (meta) meta.textContent = (entry.host || "site") + " " + (entry.path || "/");
+            if (button) {
+              button.addEventListener("click", () => {
+                input.value = entry.query;
+                input.focus();
+              });
+            }
+            if (link) {
+              if (entry.url) {
+                link.href = entry.url;
+              } else {
+                link.removeAttribute("href");
+                link.textContent = "View";
+              }
+            }
+
+            listNode.appendChild(fragment);
+          });
+        }
+
+        function normalizeList(raw) {
+          return Array.isArray(raw) ? raw.map(normalize).filter(Boolean) : [];
+        }
+
+        async function loadIndex() {
+          const seedRaw = document.getElementById("gateway-seed-index");
+          const seedItems = normalizeList(safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", []));
+          if (!indexAction || !gatewayOrigin) {
+            currentEntries = shuffle(seedItems);
+            renderItems(currentEntries);
+            return;
+          }
+
+          try {
+            const response = await fetch(gatewayOrigin + "/template/call", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                action: indexAction,
+                payload: { limit: indexLimit },
+              }),
+            });
+
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              throw new Error((data && (data.error || data.code)) || "index_fetch_failed");
+            }
+
+            const source = data.items || (data.data && data.data.items) || data.sites || [];
+            const normalized = normalizeList(source);
+            currentEntries = shuffle(normalized.length ? normalized : seedItems);
+            renderItems(currentEntries);
+          } catch (_err) {
+            currentEntries = shuffle(seedItems);
+            renderItems(currentEntries);
+          }
+        }
+
+        async function resolve(event) {
+          event.preventDefault();
+          const query = String(input.value || "").trim();
+          if (!query) {
+            setStatus("Type route, domain, or page id first.", "error");
+            return;
+          }
+
+          setStatus("Resolving route...", "info");
+
+          try {
+            const response = await fetch(gatewayOrigin + "/template/call", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                action: searchAction,
+                payload: { query, path: query, host: query },
+              }),
+            });
+
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              throw new Error((data && (data.error || data.code)) || "resolve_failed");
+            }
+
+            const target = data.url || data.redirectUrl || (data.data && data.data.url) || "";
+            if (typeof target === "string" && target.length > 0) {
+              setStatus("Resolved. Opening destination...", "ok");
+              setTimeout(() => {
+                window.location.href = target;
+              }, 180);
+              return;
+            }
+
+            const route = data.route || (data.data && data.data.route) || query;
+            setStatus("Resolved route: " + route, "ok");
+          } catch (error) {
+            setStatus("Resolve failed: " + (error && error.message ? error.message : "unknown_error"), "error");
+          }
+        }
+
+        form.addEventListener("submit", resolve);
+
+        if (reshuffleButton) {
+          reshuffleButton.addEventListener("click", function () {
+            currentEntries = shuffle(currentEntries);
+            renderItems(currentEntries);
+          });
+        }
+
+        loadIndex();
+      })();
+    </script>
+  </body>
+</html>

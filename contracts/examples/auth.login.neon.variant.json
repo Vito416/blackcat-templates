@@ -1,0 +1,12 @@
+{
+  "schema": "blackcat.block.variant.v0.1",
+  "blockId": "auth.login",
+  "variantId": "neon-pulse",
+  "version": "0.1.0",
+  "extends": "auth.login@0.1.0",
+  "style": "dist/auth/variants/neon.css",
+  "tokens": "dist/auth/variants/neon.tokens.json",
+  "templateOverrides": {
+    "slots/form": "dist/auth/variants/neon.form.html"
+  }
+}

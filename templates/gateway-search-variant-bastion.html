@@ -4,185 +4,240 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{SITE_TITLE}}</title>
-    <style>
-      :root {
-        --bg: #101010;
-        --fg: #f5f5f5;
-        --accent: #ffd400;
-        --danger: #ff6d6d;
-        --ok: #89ff90;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        background: repeating-linear-gradient(
-          45deg,
-          #0b0b0b 0px,
-          #0b0b0b 14px,
-          #111 14px,
-          #111 28px
-        );
-        color: var(--fg);
-        font-family: "IBM Plex Mono", "Courier New", monospace;
-        display: grid;
-        place-items: center;
-        padding: 20px;
-      }
-
-      .frame {
-        width: min(860px, 100%);
-        border: 4px solid var(--accent);
-        background: var(--bg);
-        box-shadow: 10px 10px 0 #000;
-      }
-
-      .head {
-        padding: 20px 24px;
-        border-bottom: 4px solid var(--accent);
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        gap: 16px;
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(1.5rem, 4.2vw, 2.4rem);
-        text-transform: uppercase;
-      }
-
-      .tagline {
-        margin: 0;
-        color: #d8d8d8;
-        font-size: 0.9rem;
-      }
-
-      .body {
-        padding: 24px;
-      }
-
-      label {
-        display: block;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        margin-bottom: 8px;
-      }
-
-      .row {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 10px;
-      }
-
-      input,
-      button {
-        border: 3px solid var(--accent);
-        border-radius: 0;
-        background: #000;
-        color: var(--fg);
-        padding: 12px;
-        font-family: inherit;
-      }
-
-      button {
-        background: var(--accent);
-        color: #151515;
-        font-weight: 700;
-        cursor: pointer;
-      }
-
-      #result {
-        margin-top: 16px;
-        border: 3px solid #343434;
-        background: #0a0a0a;
-        padding: 14px;
-        min-height: 68px;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-      }
-
-      #result.ok {
-        border-color: var(--ok);
-      }
-
-      #result.error {
-        border-color: var(--danger);
-      }
-
-      @media (max-width: 700px) {
-        .head {
-          display: block;
-        }
-
-        .row {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              mono: ['"IBM Plex Mono"', "ui-monospace", "SFMono-Regular", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
   </head>
-  <body>
-    <main class="frame">
-      <header class="head">
-        <h1>{{SITE_TITLE}}</h1>
-        <p class="tagline">{{SITE_TAGLINE}}</p>
-      </header>
-      <section class="body">
-        <label for="query">Lookup key</label>
-        <form id="search-form" class="row">
-          <input id="query" name="query" type="text" placeholder="route:/, page:home, domain:shop.example" required />
-          <button type="submit">Run</button>
-        </form>
-        <pre id="result">Ready.</pre>
-      </section>
-    </main>
+  <body class="min-h-screen bg-neutral-950 font-mono text-neutral-100">
+    <div class="min-h-screen bg-[repeating-linear-gradient(45deg,#070707_0px,#070707_12px,#0f0f0f_12px,#0f0f0f_24px)] p-4 md:p-8">
+      <main class="mx-auto max-w-6xl border-4 border-amber-300 bg-black shadow-[10px_10px_0_0_#111]">
+        <header class="grid gap-3 border-b-4 border-amber-300 p-5 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <p class="text-xs uppercase tracking-[0.18em] text-amber-200/90">Gateway Console</p>
+            <h1 class="mt-1 text-2xl font-bold uppercase md:text-4xl">{{SITE_TITLE}}</h1>
+          </div>
+          <p class="text-sm text-neutral-300">{{SITE_TAGLINE}}</p>
+        </header>
 
+        <section class="grid gap-4 p-5 md:grid-cols-[1fr_1fr]">
+          <div class="space-y-4">
+            <p class="text-xs uppercase tracking-[0.16em] text-neutral-400">{{INDEX_MODE_LABEL}}</p>
+            <form id="search-form" class="grid gap-2 md:grid-cols-[1fr_auto]">
+              <input
+                id="query"
+                name="query"
+                type="search"
+                required
+                placeholder="{{SEARCH_PLACEHOLDER}}"
+                class="border-2 border-amber-300 bg-black px-3 py-2 text-sm text-neutral-100 outline-none focus:ring-2 focus:ring-amber-300/40"
+              />
+              <button
+                type="submit"
+                class="border-2 border-amber-300 bg-amber-300 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-black hover:brightness-105"
+              >
+                Execute
+              </button>
+            </form>
+            <pre id="search-result" class="min-h-[6rem] border-2 border-neutral-700 bg-neutral-950 p-3 text-xs text-neutral-200">Ready.</pre>
+          </div>
+
+          <aside class="space-y-3 border-2 border-neutral-800 bg-neutral-950/80 p-3">
+            <div class="flex items-center justify-between gap-3">
+              <h2 class="text-sm font-bold uppercase tracking-[0.16em] text-amber-200">Indexed Pages</h2>
+              <button
+                id="reshuffle"
+                type="button"
+                class="border border-neutral-600 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-neutral-200 hover:border-amber-300 hover:text-amber-200"
+              >
+                Shuffle
+              </button>
+            </div>
+            <ul id="index-list" class="max-h-[24rem] space-y-2 overflow-auto pr-1 text-xs"></ul>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script id="seed-index" type="application/json">{{INDEX_SEED_JSON}}</script>
     <script>
       (function () {
-        const gatewayOrigin = "{{GATEWAY_ORIGIN}}";
-        const action = "{{SEARCH_ACTION}}";
+        const gatewayOrigin = String("{{GATEWAY_ORIGIN}}" || "").replace(/\/+$/, "");
+        const searchAction = "{{SEARCH_ACTION}}";
+        const indexAction = String("{{INDEX_ACTION}}" || "").trim();
+        const indexLimit = Math.max(1, Number.parseInt("{{INDEX_LIMIT}}", 10) || 120);
+
         const form = document.getElementById("search-form");
         const queryInput = document.getElementById("query");
-        const result = document.getElementById("result");
+        const resultNode = document.getElementById("search-result");
+        const listNode = document.getElementById("index-list");
+        const reshuffleButton = document.getElementById("reshuffle");
 
-        form.addEventListener("submit", async function (event) {
-          event.preventDefault();
-          const query = (queryInput.value || "").trim();
-          if (!query) {
-            result.className = "error";
-            result.textContent = "Missing query.";
+        function draw(max) {
+          if (max <= 0) return 0;
+          if (window.crypto && typeof window.crypto.getRandomValues === "function") {
+            const buf = new Uint32Array(1);
+            window.crypto.getRandomValues(buf);
+            return buf[0] % max;
+          }
+          return Math.floor(Math.random() * max);
+        }
+
+        function shuffle(values) {
+          const arr = values.slice();
+          for (let i = arr.length - 1; i > 0; i -= 1) {
+            const j = draw(i + 1);
+            const tmp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = tmp;
+          }
+          return arr;
+        }
+
+        function safeJson(text, fallback) {
+          try {
+            return JSON.parse(text);
+          } catch (_err) {
+            return fallback;
+          }
+        }
+
+        function normalize(item) {
+          if (!item || typeof item !== "object") return null;
+          const siteId = String(item.siteId || item["Site-Id"] || item.id || "").trim();
+          const title = String(item.title || item.name || item.host || siteId || "").trim();
+          const host = String(item.host || item.domain || "").trim();
+          const path = String(item.path || item.route || "/").trim() || "/";
+          const url = String(item.url || "").trim() || (host ? "https://" + host + (path.startsWith("/") ? path : "/" + path) : "");
+          const query = String(item.query || host || path || siteId).trim();
+          if (!title || !query) return null;
+          return { siteId, title, host, path, url, query };
+        }
+
+        function setResult(text, kind) {
+          if (kind === "ok") {
+            resultNode.className = "min-h-[6rem] border-2 border-emerald-500 bg-emerald-900/20 p-3 text-xs text-emerald-100";
+          } else if (kind === "error") {
+            resultNode.className = "min-h-[6rem] border-2 border-rose-500 bg-rose-900/20 p-3 text-xs text-rose-100";
+          } else {
+            resultNode.className = "min-h-[6rem] border-2 border-neutral-700 bg-neutral-950 p-3 text-xs text-neutral-200";
+          }
+          resultNode.textContent = text;
+        }
+
+        function renderIndex(entries) {
+          listNode.innerHTML = "";
+          if (!entries.length) {
+            const li = document.createElement("li");
+            li.className = "border border-neutral-700 bg-black p-2 text-neutral-400";
+            li.textContent = "No entries.";
+            listNode.appendChild(li);
             return;
           }
 
-          result.className = "";
-          result.textContent = "Sending to gateway...";
+          entries.forEach(function (entry) {
+            const li = document.createElement("li");
+            li.className = "border border-neutral-700 bg-neutral-900 p-2";
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "block w-full text-left";
+            button.innerHTML =
+              '<span class="block font-bold text-neutral-100">' +
+              entry.title +
+              "</span>" +
+              '<span class="mt-1 block text-[10px] text-neutral-400">' +
+              (entry.host || "site") +
+              " " +
+              (entry.path || "/") +
+              "</span>";
+            button.addEventListener("click", function () {
+              queryInput.value = entry.query;
+              queryInput.focus();
+            });
+            li.appendChild(button);
+            listNode.appendChild(li);
+          });
+        }
+
+        async function loadIndex() {
+          const seedRaw = document.getElementById("seed-index");
+          const seedList = Array.isArray(safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", []))
+            ? safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", [])
+            : [];
+          const seedNormalized = seedList.map(normalize).filter(Boolean);
+          if (!indexAction || !gatewayOrigin) {
+            renderIndex(shuffle(seedNormalized));
+            return;
+          }
 
           try {
             const response = await fetch(gatewayOrigin + "/template/call", {
               method: "POST",
               headers: { "content-type": "application/json" },
               body: JSON.stringify({
-                action,
-                payload: { query, source: "bastion" },
+                action: indexAction,
+                payload: { limit: indexLimit },
+              }),
+            });
+            const data = await response.json().catch(function () { return {}; });
+            if (!response.ok) {
+              throw new Error((data && (data.error || data.code)) || "index_fetch_failed");
+            }
+            const rawItems = data.items || (data.data && data.data.items) || data.sites || [];
+            const normalized = Array.isArray(rawItems) ? rawItems.map(normalize).filter(Boolean) : [];
+            renderIndex(shuffle(normalized.length ? normalized : seedNormalized));
+          } catch (_err) {
+            renderIndex(shuffle(seedNormalized));
+          }
+        }
+
+        async function submitSearch(event) {
+          event.preventDefault();
+          const query = String(queryInput.value || "").trim();
+          if (!query) {
+            setResult("Missing query.", "error");
+            return;
+          }
+
+          setResult("Dispatching command ...", "info");
+          try {
+            const response = await fetch(gatewayOrigin + "/template/call", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({
+                action: searchAction,
+                payload: { query, path: query, host: query },
               }),
             });
             const data = await response.json().catch(function () { return null; });
             if (!response.ok) {
-              throw new Error((data && data.error) || "gateway_rejected");
+              throw new Error((data && (data.error || data.code)) || "request_failed");
             }
-
-            result.className = "ok";
-            result.textContent = JSON.stringify(data, null, 2);
+            setResult(JSON.stringify(data, null, 2), "ok");
           } catch (error) {
-            result.className = "error";
-            result.textContent = "Failure: " + (error && error.message ? error.message : String(error));
+            setResult("Failure: " + (error && error.message ? error.message : String(error)), "error");
           }
+        }
+
+        form.addEventListener("submit", submitSearch);
+        reshuffleButton.addEventListener("click", function () {
+          const cards = Array.from(listNode.children);
+          const shuffled = shuffle(cards);
+          listNode.innerHTML = "";
+          shuffled.forEach(function (node) {
+            listNode.appendChild(node);
+          });
         });
+
+        loadIndex();
       })();
     </script>
   </body>

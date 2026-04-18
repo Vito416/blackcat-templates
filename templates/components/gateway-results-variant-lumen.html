@@ -1,0 +1,26 @@
+<section class="rounded-[2rem] border border-slate-300/35 bg-white/90 p-5 text-slate-900 shadow-mesh md:p-7">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="font-serif text-4xl italic">Indexed Pages</h2>
+      <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">{{INDEX_MODE_LABEL}}</p>
+    </div>
+    <button
+      id="gateway-reshuffle"
+      type="button"
+      class="rounded-full border border-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-900 transition hover:bg-slate-900 hover:text-white"
+    >
+      Reshuffle
+    </button>
+  </div>
+  <ul id="gateway-results-list" class="grid gap-3 md:grid-cols-2"></ul>
+
+  <template id="gateway-result-item-template">
+    <li class="rounded-2xl border border-slate-300 bg-white p-4">
+      <button type="button" data-result-query class="w-full text-left">
+        <strong data-result-title class="block text-lg font-semibold text-slate-900"></strong>
+        <span data-result-meta class="mt-1 block text-xs text-slate-500"></span>
+      </button>
+      <a data-result-link target="_blank" rel="noreferrer noopener" class="mt-2 inline-flex text-xs font-semibold uppercase tracking-[0.14em] text-indigo-700">Open</a>
+    </li>
+  </template>
+</section>

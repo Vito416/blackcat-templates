@@ -1,0 +1,48 @@
+{
+  "schema": "blackcat.block.manifest.v0.1",
+  "blockId": "auth.login",
+  "version": "0.1.0",
+  "kind": "feature",
+  "runtime": {
+    "client": "esm",
+    "entry": "dist/auth/login.entry.js"
+  },
+  "ui": {
+    "markup": "dist/auth/login.html",
+    "style": "dist/auth/login.css",
+    "slots": ["title", "form", "actions"]
+  },
+  "logic": {
+    "stateMachine": "dist/auth/login.machine.json",
+    "events": ["login.start", "login.challenge", "login.success", "login.fail"]
+  },
+  "contracts": {
+    "gatewayActions": [
+      {
+        "name": "auth.issue-otp",
+        "requestSchemaRef": "schemas/template/auth.issue-otp.request.json",
+        "responseSchemaRef": "schemas/template/auth.issue-otp.response.json",
+        "idempotency": "required"
+      },
+      {
+        "name": "auth.verify-otp",
+        "requestSchemaRef": "schemas/template/auth.verify-otp.request.json",
+        "responseSchemaRef": "schemas/template/auth.verify-otp.response.json",
+        "idempotency": "required"
+      }
+    ],
+    "requiresSiteBinding": true,
+    "requiresWorkerSignature": true
+  },
+  "security": {
+    "forbiddenCapabilities": ["secret-access", "raw-sql", "arbitrary-outbound-http", "eval"]
+  },
+  "integrity": {
+    "bundleSha256": "sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "signature": {
+      "algo": "ed25519",
+      "signerRef": "site-owner-key-1",
+      "sig": "EXAMPLE_SIGNATURE_PLACEHOLDER"
+    }
+  }
+}

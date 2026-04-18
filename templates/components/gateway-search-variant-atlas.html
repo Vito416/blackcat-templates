@@ -1,0 +1,28 @@
+<section class="grid gap-5 border-4 border-black bg-lime-200 p-4 text-black shadow-[12px_12px_0_0_rgba(0,0,0,0.85)] md:grid-cols-[1fr_1.1fr] md:p-6">
+  <div class="space-y-3 border-2 border-black bg-white p-4">
+    <p class="text-xs font-black uppercase tracking-[0.2em]">Global Index Router</p>
+    <h1 class="font-display text-4xl uppercase leading-none md:text-5xl">{{SITE_TITLE}}</h1>
+    <p class="text-sm leading-relaxed text-black/80">{{SITE_TAGLINE}}</p>
+  </div>
+
+  <div class="space-y-3 border-2 border-black bg-amber-100 p-4">
+    <form id="gateway-search-form" class="grid gap-3">
+      <input
+        id="gateway-search-input"
+        name="query"
+        type="search"
+        required
+        autocomplete="off"
+        placeholder="{{SEARCH_PLACEHOLDER}}"
+        class="border-2 border-black bg-white px-4 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-black outline-none"
+      />
+      <button
+        type="submit"
+        class="border-2 border-black bg-black px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-amber-100 transition hover:bg-transparent hover:text-black"
+      >
+        Resolve Route
+      </button>
+    </form>
+    <div id="gateway-search-status" class="border-2 border-black bg-white px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] text-black">Ready for lookup.</div>
+  </div>
+</section>

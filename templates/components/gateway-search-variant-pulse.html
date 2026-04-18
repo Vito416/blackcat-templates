@@ -1,0 +1,28 @@
+<section class="grid gap-5 rounded-3xl border border-white/20 bg-slate-900/35 p-5 shadow-mesh backdrop-blur-xl md:grid-cols-[1.2fr_1fr] md:p-7">
+  <div class="space-y-4">
+    <p class="inline-flex rounded-full border border-cyan-200/40 bg-cyan-200/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-cyan-100">Mesh Search Core</p>
+    <h1 class="font-display text-4xl leading-tight text-slate-100 md:text-5xl">{{SITE_TITLE}}</h1>
+    <p class="max-w-2xl text-slate-200/95">{{SITE_TAGLINE}}</p>
+  </div>
+
+  <div class="space-y-3">
+    <form id="gateway-search-form" class="grid gap-3">
+      <input
+        id="gateway-search-input"
+        name="query"
+        type="search"
+        required
+        autocomplete="off"
+        placeholder="{{SEARCH_PLACEHOLDER}}"
+        class="rounded-2xl border border-white/20 bg-white px-4 py-3 text-slate-900 outline-none ring-cyan-300/70 transition focus:ring"
+      />
+      <button
+        type="submit"
+        class="rounded-2xl bg-cyan-300 px-4 py-3 text-sm font-black uppercase tracking-[0.16em] text-slate-900 transition hover:brightness-105"
+      >
+        Resolve Route
+      </button>
+    </form>
+    <div id="gateway-search-status" class="rounded-2xl border border-sky-300/45 bg-sky-400/10 p-3 text-sm text-sky-100">Ready for lookup.</div>
+  </div>
+</section>

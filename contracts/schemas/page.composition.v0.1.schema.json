@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blackcat.darkmesh/schemas/page.composition.v0.1.schema.json",
+  "title": "BlackCat Page Composition v0.1",
+  "type": "object",
+  "required": ["schema", "siteId", "pageId", "version", "shellRef", "blocks", "integrity"],
+  "properties": {
+    "schema": { "const": "blackcat.page.composition.v0.1" },
+    "siteId": { "type": "string", "minLength": 1 },
+    "pageId": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "minLength": 1 },
+    "shellRef": {
+      "type": "object",
+      "required": ["txId", "sha256"],
+      "properties": {
+        "txId": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["instanceId", "slot", "blockRef", "variantRef", "propsRef"],
+        "properties": {
+          "instanceId": { "type": "string", "minLength": 1 },
+          "slot": { "type": "string", "minLength": 1 },
+          "blockRef": {
+            "type": "object",
+            "required": ["blockId", "version", "txId", "sha256"],
+            "properties": {
+              "blockId": { "type": "string", "minLength": 1 },
+              "version": { "type": "string", "minLength": 1 },
+              "txId": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+          },
+          "variantRef": {
+            "type": "object",
+            "required": ["variantId", "txId", "sha256"],
+            "properties": {
+              "variantId": { "type": "string", "minLength": 1 },
+              "txId": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+          },
+          "propsRef": {
+            "type": "object",
+            "required": ["txId", "sha256"],
+            "properties": {
+              "txId": { "type": "string", "minLength": 1 },
+              "sha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "required": ["compositionSha256"],
+      "properties": {
+        "compositionSha256": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

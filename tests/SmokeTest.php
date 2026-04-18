@@ -60,6 +60,31 @@ $searchTemplate = $renderer->render('gateway_search_variant_signal', [
 assert(str_contains($searchTemplate, 'Darkmesh Search'));
 assert(str_contains($searchTemplate, 'public.resolve-route'));
 
+$menuFragment = $renderer->render('gateway_component_menu_pulse', [
+    'SITE_TITLE' => 'Darkmesh Search',
+]);
+$searchFragment = $renderer->render('gateway_component_search_pulse', [
+    'SITE_TITLE' => 'Darkmesh Search',
+    'SITE_TAGLINE' => 'Composable UX',
+]);
+$resultsFragment = $renderer->render('gateway_component_results_pulse', [
+    'INDEX_MODE_LABEL' => 'fair-order',
+]);
+$footerFragment = $renderer->render('gateway_component_footer_pulse', [
+    'FOOTER_NOTE' => 'Deterministic templates',
+]);
+
+$composedTemplate = $renderer->render('gateway_search_shell_core', [
+    'SITE_TITLE' => 'Darkmesh Search',
+    'GATEWAY_ORIGIN' => 'https://gateway.example',
+    'MENU_COMPONENT' => $menuFragment,
+    'SEARCH_COMPONENT' => $searchFragment,
+    'RESULTS_COMPONENT' => $resultsFragment,
+    'FOOTER_COMPONENT' => $footerFragment,
+]);
+assert(str_contains($composedTemplate, 'gateway-search-form'));
+assert(str_contains($composedTemplate, 'gateway-results-list'));
+
 $metricsFile = $config->telemetryFile();
 assert(is_string($metricsFile));
 assert(is_file($metricsFile));
