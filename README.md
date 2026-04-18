@@ -11,6 +11,11 @@ This repo now includes:
   - `gateway_search_shell_core` (page skeleton)
   - menu/search/results/footer fragments in three original styles (`pulse`, `atlas`, `lumen`)
   - `gateway:compose` command that assembles shell + selected style profile
+- block-library batch 02 (stavebnice for real site flows):
+  - auth blocks (`login`, `register`, `recovery`)
+  - commerce blocks (`product-grid`, `cart-drawer`, `checkout-summary`)
+  - content blocks (`hero`, `feature-grid`, `faq`, `cta-band`)
+  - account blocks (`dashboard`, `orders`, `security`, `notifications`)
 - block-spec scaffolding for TS/JS frontend logic:
   - `contracts/schemas/*.v0.1.schema.json`
   - `contracts/examples/*.json`
@@ -60,6 +65,7 @@ Smoke test boots registry, renders templates, runs security scan, and verifies m
 - Runbook: `docs/GATEWAY_SEARCH_RELEASE.md`
 - Component kit guide: `docs/GATEWAY_COMPONENT_KIT.md`
 - Block spec v0.1: `docs/BLOCK_SPEC_V0_1.md`
+- Block library batch 02: `docs/BLOCK_LIBRARY_BATCH_02.md`
 - Variant map example: `docs/gateway-search-variant-map.example.json`
 
 ## Component-kit model (project default)

@@ -85,6 +85,32 @@ $composedTemplate = $renderer->render('gateway_search_shell_core', [
 assert(str_contains($composedTemplate, 'gateway-search-form'));
 assert(str_contains($composedTemplate, 'gateway-results-list'));
 
+$authLogin = $renderer->render('gateway_component_auth_login_cipher', [
+    'LOGIN_TITLE' => 'Sign in',
+    'LOGIN_ACTION' => '/auth/login',
+]);
+assert(str_contains($authLogin, 'Sign in'));
+assert(str_contains($authLogin, '/auth/login'));
+
+$commerceGrid = $renderer->render('gateway_component_commerce_product_grid_rally', [
+    'PRODUCT_GRID_TITLE' => 'Featured products',
+    'PRODUCT_CARD_ITEMS_HTML' => '<article>Item</article>',
+]);
+assert(str_contains($commerceGrid, 'Featured products'));
+assert(str_contains($commerceGrid, '<article>Item</article>'));
+
+$contentFaq = $renderer->render('gateway_component_content_faq_prism', [
+    'HEADING' => 'FAQ',
+    'FAQ_ITEMS_HTML' => '<details><summary>Q</summary><p>A</p></details>',
+]);
+assert(str_contains($contentFaq, 'FAQ'));
+assert(str_contains($contentFaq, '<details>'));
+
+$accountDashboard = $renderer->render('gateway_component_account_dashboard_axis', [
+    'ACCOUNT_TITLE' => 'Account center',
+]);
+assert(str_contains($accountDashboard, 'Account center'));
+
 $metricsFile = $config->telemetryFile();
 assert(is_string($metricsFile));
 assert(is_file($metricsFile));
