@@ -1,0 +1,44 @@
+<section class="rounded-[2rem] border border-white/12 bg-[linear-gradient(135deg,#132238_0%,#0f172a_48%,#08101d_100%)] px-5 py-6 text-slate-50 shadow-[0_24px_80px_rgba(2,6,23,0.42)] md:px-8 md:py-8">
+  <div class="relative overflow-hidden rounded-[1.7rem] border border-white/10 bg-white/5 px-5 py-6 backdrop-blur-xl md:px-7 md:py-7">
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute left-[-6rem] top-[-4rem] h-48 w-48 rounded-full bg-emerald-300/12 blur-3xl"></div>
+      <div class="absolute right-[-5rem] bottom-[-6rem] h-56 w-56 rounded-full bg-cyan-300/12 blur-3xl"></div>
+    </div>
+
+    <div class="relative grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+      <div class="space-y-4">
+        <span class="inline-flex rounded-full border border-emerald-200/20 bg-emerald-200/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-100">
+          {{SECTION_LABEL}}
+        </span>
+        <h2 class="text-balance font-display text-3xl font-black leading-tight tracking-[-0.04em] text-white md:text-5xl">
+          {{HEADING}}
+        </h2>
+        <p class="max-w-2xl text-pretty text-base leading-7 text-slate-300 md:text-lg">
+          {{SUBHEADING}}
+        </p>
+
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="{{PRIMARY_CTA_HREF}}"
+            class="inline-flex items-center justify-center rounded-full bg-white px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-slate-950 transition hover:bg-emerald-100"
+          >
+            {{PRIMARY_CTA_LABEL}}
+          </a>
+          <a
+            href="{{SECONDARY_CTA_HREF}}"
+            class="inline-flex items-center justify-center rounded-full border border-white/15 bg-transparent px-5 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-slate-100 transition hover:bg-white/10"
+          >
+            {{SECONDARY_CTA_LABEL}}
+          </a>
+        </div>
+      </div>
+
+      <div class="rounded-[1.5rem] border border-white/10 bg-slate-950/50 p-4">
+        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">{{SIDEBAR_LABEL}}</p>
+        <div class="mt-4 space-y-3">
+          {{CTA_POINTS_HTML}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
