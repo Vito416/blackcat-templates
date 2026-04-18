@@ -21,6 +21,7 @@ This batch adds four page families to the composition library:
 - Purpose: login, MFA, recovery, and trust-device prompts.
 - Recommended shell: a narrow auth shell with a single primary action area and a secondary support rail.
 - Integration notes: gateway should keep challenge endpoints idempotent; web builder should avoid storing secrets in props and should surface only public labels, copy, and state hints.
+- Darkmesh production rule: auth fragments are UI building blocks only. Final auth authority must stay OTP-first on per-site worker secrets (no password/PIP secret logic in public templates).
 
 ### Commerce
 
