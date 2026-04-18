@@ -1,0 +1,53 @@
+{
+  "schema": "blackcat.page.composition.v0.1",
+  "siteId": "site-alpha",
+  "pageId": "account",
+  "version": "2026-04-18.1",
+  "shellRef": {
+    "txId": "AR_TX_ACCOUNT_SHELL",
+    "sha256": "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd"
+  },
+  "blocks": [
+    {
+      "instanceId": "account-profile-1",
+      "slot": "main",
+      "blockRef": {
+        "blockId": "account.profile-overview",
+        "version": "0.1.0",
+        "txId": "AR_TX_ACCOUNT_PROFILE_BLOCK",
+        "sha256": "dededededededededededededededededededededededededededededededede"
+      },
+      "variantRef": {
+        "variantId": "profile-card",
+        "txId": "AR_TX_ACCOUNT_PROFILE_VARIANT",
+        "sha256": "efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef"
+      },
+      "propsRef": {
+        "txId": "AR_TX_ACCOUNT_PROFILE_PROPS",
+        "sha256": "f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"
+      }
+    },
+    {
+      "instanceId": "account-security-1",
+      "slot": "rail",
+      "blockRef": {
+        "blockId": "account.security-settings",
+        "version": "0.1.0",
+        "txId": "AR_TX_ACCOUNT_SECURITY_BLOCK",
+        "sha256": "a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1"
+      },
+      "variantRef": {
+        "variantId": "secure-panel",
+        "txId": "AR_TX_ACCOUNT_SECURITY_VARIANT",
+        "sha256": "b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2"
+      },
+      "propsRef": {
+        "txId": "AR_TX_ACCOUNT_SECURITY_PROPS",
+        "sha256": "c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3"
+      }
+    }
+  ],
+  "integrity": {
+    "compositionSha256": "d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "blackcat.page.composition.v0.1",
+  "siteId": "site-alpha",
+  "pageId": "commerce",
+  "version": "2026-04-18.1",
+  "shellRef": {
+    "txId": "AR_TX_COMMERCE_SHELL",
+    "sha256": "9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "blocks": [
+    {
+      "instanceId": "commerce-summary-1",
+      "slot": "sidebar",
+      "blockRef": {
+        "blockId": "commerce.cart-summary",
+        "version": "0.1.0",
+        "txId": "AR_TX_COMMERCE_SUMMARY_BLOCK",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "variantRef": {
+        "variantId": "compact-ledger",
+        "txId": "AR_TX_COMMERCE_SUMMARY_VARIANT",
+        "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "propsRef": {
+        "txId": "AR_TX_COMMERCE_SUMMARY_PROPS",
+        "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      }
+    },
+    {
+      "instanceId": "commerce-checkout-1",
+      "slot": "main",
+      "blockRef": {
+        "blockId": "commerce.checkout-form",
+        "version": "0.1.0",
+        "txId": "AR_TX_COMMERCE_CHECKOUT_BLOCK",
+        "sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "variantRef": {
+        "variantId": "balanced-flow",
+        "txId": "AR_TX_COMMERCE_CHECKOUT_VARIANT",
+        "sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "propsRef": {
+        "txId": "AR_TX_COMMERCE_CHECKOUT_PROPS",
+        "sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    }
+  ],
+  "integrity": {
+    "compositionSha256": "abababababababababababababababababababababababababababababababab"
+  }
+}

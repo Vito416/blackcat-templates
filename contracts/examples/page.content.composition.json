@@ -1,0 +1,53 @@
+{
+  "schema": "blackcat.page.composition.v0.1",
+  "siteId": "site-alpha",
+  "pageId": "content",
+  "version": "2026-04-18.1",
+  "shellRef": {
+    "txId": "AR_TX_CONTENT_SHELL",
+    "sha256": "e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5"
+  },
+  "blocks": [
+    {
+      "instanceId": "content-hero-1",
+      "slot": "main",
+      "blockRef": {
+        "blockId": "content.article-hero",
+        "version": "0.1.0",
+        "txId": "AR_TX_CONTENT_HERO_BLOCK",
+        "sha256": "f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6"
+      },
+      "variantRef": {
+        "variantId": "editorial-wide",
+        "txId": "AR_TX_CONTENT_HERO_VARIANT",
+        "sha256": "0707070707070707070707070707070707070707070707070707070707070707"
+      },
+      "propsRef": {
+        "txId": "AR_TX_CONTENT_HERO_PROPS",
+        "sha256": "1818181818181818181818181818181818181818181818181818181818181818"
+      }
+    },
+    {
+      "instanceId": "content-related-1",
+      "slot": "rail",
+      "blockRef": {
+        "blockId": "content.related-links",
+        "version": "0.1.0",
+        "txId": "AR_TX_CONTENT_RELATED_BLOCK",
+        "sha256": "2929292929292929292929292929292929292929292929292929292929292929"
+      },
+      "variantRef": {
+        "variantId": "compact-rail",
+        "txId": "AR_TX_CONTENT_RELATED_VARIANT",
+        "sha256": "3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a3a"
+      },
+      "propsRef": {
+        "txId": "AR_TX_CONTENT_RELATED_PROPS",
+        "sha256": "4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b4b"
+      }
+    }
+  ],
+  "integrity": {
+    "compositionSha256": "5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c5c"
+  }
+}

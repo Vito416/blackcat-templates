@@ -1,0 +1,53 @@
+{
+  "schema": "blackcat.page.composition.v0.1",
+  "siteId": "site-alpha",
+  "pageId": "auth",
+  "version": "2026-04-18.1",
+  "shellRef": {
+    "txId": "AR_TX_AUTH_SHELL",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "blocks": [
+    {
+      "instanceId": "auth-login-1",
+      "slot": "main",
+      "blockRef": {
+        "blockId": "auth.login",
+        "version": "0.1.0",
+        "txId": "AR_TX_AUTH_LOGIN_BLOCK",
+        "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "variantRef": {
+        "variantId": "neon-pulse",
+        "txId": "AR_TX_AUTH_LOGIN_VARIANT",
+        "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "propsRef": {
+        "txId": "AR_TX_AUTH_LOGIN_PROPS",
+        "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+      }
+    },
+    {
+      "instanceId": "auth-mfa-1",
+      "slot": "support",
+      "blockRef": {
+        "blockId": "auth.mfa-prompt",
+        "version": "0.1.0",
+        "txId": "AR_TX_AUTH_MFA_BLOCK",
+        "sha256": "5555555555555555555555555555555555555555555555555555555555555555"
+      },
+      "variantRef": {
+        "variantId": "quiet-rail",
+        "txId": "AR_TX_AUTH_MFA_VARIANT",
+        "sha256": "6666666666666666666666666666666666666666666666666666666666666666"
+      },
+      "propsRef": {
+        "txId": "AR_TX_AUTH_MFA_PROPS",
+        "sha256": "7777777777777777777777777777777777777777777777777777777777777777"
+      }
+    }
+  ],
+  "integrity": {
+    "compositionSha256": "8888888888888888888888888888888888888888888888888888888888888888"
+  }
+}
