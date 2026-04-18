@@ -67,6 +67,7 @@ Smoke test boots registry, renders templates, runs security scan, and verifies m
 - Block spec v0.1: `docs/BLOCK_SPEC_V0_1.md`
 - Block library batch 02: `docs/BLOCK_LIBRARY_BATCH_02.md`
 - Variant map example: `docs/gateway-search-variant-map.example.json`
+- Release map v0.1.0: `docs/releases/gateway-search-v0.1.0.json`
 
 ## Component-kit model (project default)
 - Templates are split into reusable parts (`menu`, `search`, `results`, `footer`) rather than one big page.

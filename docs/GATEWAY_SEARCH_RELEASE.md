@@ -40,6 +40,21 @@ php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" security:scan
 4. Commit the release map in the templates repo.
 5. Mirror the selected variant in gateway config (site -> variant + tx id).
 
+## Release `v0.1.0` (2026-04-18)
+
+Published release map:
+- `docs/releases/gateway-search-v0.1.0.json`
+
+Variant tx ids:
+- `signal`: `CZ6Wg4Ir2R_xFdMprOb1AZ-0H_AoE-nMLKpJjb8wDg8`
+- `bastion`: `9hOM1kdaOjjStHOIPrk8vXcvLObH96MuXsAYJ8Qtg_g`
+- `horizon`: `DMmiHdE5fALZ22EHsKlKKs0P_S817quheZuGOi3eJJA`
+
+Integrity hashes:
+- `signal`: `97196893aca0ad8f733ee2a8a3284aedd1360c0d42423be1b539740f0c993bb7`
+- `bastion`: `b471c19839b7105ed9d0125975a63ca1fa13070cf41942746a6aa5c433eea6d2`
+- `horizon`: `ef0920620f9fa3a5611c13c363a1196858f43d0e466f05c7895fba07710cb85c`
+
 ## Notes
 
 - Templates stay public and deterministic by design.
