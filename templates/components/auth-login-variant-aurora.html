@@ -1,0 +1,367 @@
+<section data-auth-login-root="aurora" class="auth-login auth-login-aurora">
+  <style>
+    [data-auth-login-root="aurora"] {
+      --panel: rgba(12, 20, 34, 0.7);
+      --panel-strong: rgba(14, 24, 40, 0.9);
+      --line: rgba(255, 255, 255, 0.16);
+      --text: #eef6ff;
+      --muted: #b6c7d8;
+      --accent: #7de2ff;
+      --accent-2: #a08bff;
+      --accent-3: #7ff1c6;
+      --danger: #ff8db3;
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background:
+        radial-gradient(circle at 12% 12%, rgba(125, 226, 255, 0.28), transparent 24%),
+        radial-gradient(circle at 88% 18%, rgba(160, 139, 255, 0.24), transparent 22%),
+        radial-gradient(circle at 70% 88%, rgba(127, 241, 198, 0.18), transparent 20%),
+        linear-gradient(145deg, #08111d, #14213a 55%, #07111a);
+      box-shadow: 0 32px 80px rgba(3, 8, 18, 0.55);
+    }
+
+    [data-auth-login-root="aurora"]::before {
+      content: "";
+      position: absolute;
+      inset: auto -10% -35% 35%;
+      block-size: 65%;
+      background: linear-gradient(180deg, rgba(125, 226, 255, 0.18), rgba(160, 139, 255, 0.08), transparent);
+      filter: blur(24px);
+      pointer-events: none;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__layout {
+      position: relative;
+      display: grid;
+      gap: 0.95rem;
+      padding: 1rem;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__panel {
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__intro {
+      padding: 1.25rem;
+      background:
+        linear-gradient(160deg, rgba(125, 226, 255, 0.12), transparent 40%),
+        linear-gradient(340deg, rgba(160, 139, 255, 0.1), transparent 45%),
+        var(--panel);
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.36rem 0.72rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.05);
+      color: #e7f4ff;
+      font-size: 0.74rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__badge::before {
+      content: "";
+      inline-size: 0.55rem;
+      block-size: 0.55rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-3));
+      box-shadow: 0 0 18px rgba(125, 226, 255, 0.55);
+    }
+
+    [data-auth-login-root="aurora"] h2 {
+      margin: 0.95rem 0 0.35rem;
+      font-size: clamp(2rem, 4vw, 3.9rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__subtitle {
+      max-width: 38ch;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__glance {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.6rem;
+      margin-top: 1.2rem;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__glance div {
+      padding: 0.8rem;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.04);
+      color: #dcecff;
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__glance strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: white;
+      letter-spacing: 0.04em;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__formpanel {
+      padding: 1.15rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent), var(--panel-strong);
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__form {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__field {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__label {
+      font-size: 0.74rem;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+      color: #c4d4e3;
+    }
+
+    [data-auth-login-root="aurora"] input {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(5, 10, 18, 0.8);
+      color: var(--text);
+      padding: 0.98rem 1rem;
+      font: inherit;
+      outline: none;
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+
+    [data-auth-login-root="aurora"] input:focus {
+      border-color: rgba(125, 226, 255, 0.72);
+      box-shadow: 0 0 0 4px rgba(125, 226, 255, 0.13);
+      transform: translateY(-1px);
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__password {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__toggle {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 0.92rem 0.98rem;
+      font: inherit;
+      cursor: pointer;
+      min-width: 6.6rem;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__toggle[aria-pressed="true"] {
+      background: linear-gradient(135deg, rgba(125, 226, 255, 0.16), rgba(127, 241, 198, 0.14));
+      border-color: rgba(125, 226, 255, 0.5);
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__link {
+      color: #d8d2ff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__link:hover {
+      text-decoration: underline;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__error {
+      min-height: 1.25rem;
+      margin: 0;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 141, 179, 0.18);
+      background: rgba(255, 141, 179, 0.09);
+      color: #ffd6e5;
+      padding: 0.72rem 0.86rem;
+      font-size: 0.9rem;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__error:empty {
+      border-color: transparent;
+      background: transparent;
+      padding: 0;
+      min-height: 0;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__submit {
+      border: 0;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #06111c;
+      padding: 1rem 1.1rem;
+      font: inherit;
+      font-weight: 900;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 160ms ease, filter 160ms ease, opacity 160ms ease;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: saturate(1.05) brightness(1.05);
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__submit:disabled {
+      cursor: progress;
+      opacity: 0.72;
+    }
+
+    [data-auth-login-root="aurora"] .auth-login__foot {
+      margin: 0;
+      color: #bfcee0;
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 699px) {
+      [data-auth-login-root="aurora"] .auth-login__glance {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (min-width: 700px) {
+      [data-auth-login-root="aurora"] .auth-login__layout {
+        grid-template-columns: 1fr 0.96fr;
+        padding: 1.2rem;
+      }
+
+      [data-auth-login-root="aurora"] .auth-login__intro,
+      [data-auth-login-root="aurora"] .auth-login__formpanel {
+        padding: 1.35rem;
+      }
+    }
+  </style>
+
+  <div class="auth-login__layout">
+    <section class="auth-login__panel auth-login__intro">
+      <span class="auth-login__badge">{{LOGIN_METHOD}}</span>
+      <h2>{{LOGIN_TITLE}}</h2>
+      <p class="auth-login__subtitle">{{LOGIN_SUBTITLE}}</p>
+      <div class="auth-login__glance" aria-hidden="true">
+        <div><strong>Soft glow</strong> Calm, high-trust entry surface.</div>
+        <div><strong>Layered depth</strong> Gentle glass and motion hints.</div>
+        <div><strong>Fast handoff</strong> Minimal form, quick submit flow.</div>
+      </div>
+    </section>
+
+    <section class="auth-login__panel auth-login__formpanel">
+      <form class="auth-login__form" action="{{LOGIN_ACTION}}" method="post" novalidate>
+        <div class="auth-login__field">
+          <label class="auth-login__label" for="aurora-login-identity">Account</label>
+          <input id="aurora-login-identity" name="identity" type="text" autocomplete="username" required placeholder="{{LOGIN_METHOD}}" />
+        </div>
+
+        <div class="auth-login__field">
+          <label class="auth-login__label" for="aurora-login-password">Password</label>
+          <div class="auth-login__password">
+            <input id="aurora-login-password" name="password" type="password" autocomplete="current-password" required placeholder="Enter password" />
+            <button class="auth-login__toggle" type="button" aria-pressed="false" aria-controls="aurora-login-password">Reveal</button>
+          </div>
+        </div>
+
+        <div class="auth-login__row">
+          <label><input type="checkbox" name="remember" value="1" /> Trust this device</label>
+          <a class="auth-login__link" href="{{FORGOT_HREF}}">Recover access</a>
+        </div>
+
+        <p class="auth-login__error" aria-live="polite" role="alert"></p>
+
+        <button class="auth-login__submit" type="submit">{{LOGIN_CTA_LABEL}}</button>
+      </form>
+
+      <p class="auth-login__foot">The button pauses briefly after a valid submit to simulate processing while staying fully browser-native.</p>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.currentScript && document.currentScript.closest('[data-auth-login-root="aurora"]');
+      if (!root) return;
+
+      const form = root.querySelector("form");
+      const password = root.querySelector('input[type="password"]');
+      const toggle = root.querySelector(".auth-login__toggle");
+      const errorNode = root.querySelector(".auth-login__error");
+      const submit = root.querySelector(".auth-login__submit");
+
+      function clearError() {
+        errorNode.textContent = "";
+      }
+
+      function missingLabel() {
+        const field = Array.from(form.querySelectorAll("[required]")).find(function (node) {
+          return !node.value.trim();
+        });
+        return field && field.labels && field.labels[0] ? field.labels[0].textContent.trim() : "This field";
+      }
+
+      toggle.addEventListener("click", function () {
+        const reveal = password.type === "password";
+        password.type = reveal ? "text" : "password";
+        toggle.setAttribute("aria-pressed", String(reveal));
+        toggle.textContent = reveal ? "Hide" : "Reveal";
+        password.focus();
+      });
+
+      form.addEventListener("input", function () {
+        if (errorNode.textContent) clearError();
+      });
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        clearError();
+
+        if (!form.checkValidity()) {
+          errorNode.textContent = missingLabel() + " is required.";
+          const invalid = form.querySelector("[required]:invalid") || form.querySelector("[required]");
+          if (invalid && typeof invalid.focus === "function") invalid.focus();
+          return;
+        }
+
+        submit.disabled = true;
+        submit.textContent = "Processing...";
+
+        window.setTimeout(function () {
+          submit.disabled = false;
+          submit.textContent = "{{LOGIN_CTA_LABEL}}";
+        }, 950);
+      });
+    })();
+  </script>
+</section>

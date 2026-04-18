@@ -1,0 +1,316 @@
+<section data-auth-login-root="noir" class="auth-login auth-login-noir">
+  <style>
+    [data-auth-login-root="noir"] {
+      --bg: #0a0a0c;
+      --panel: rgba(255, 248, 240, 0.96);
+      --ink: #101114;
+      --muted: #5d5f66;
+      --line: rgba(16, 17, 20, 0.12);
+      --accent: #111111;
+      --accent-2: #7c5c3b;
+      --danger: #a22f31;
+      color: var(--ink);
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.02), transparent 32%),
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.12), transparent 38%),
+        linear-gradient(180deg, #050505, #111115 72%, #0a0a0c);
+      box-shadow: 0 26px 70px rgba(0, 0, 0, 0.5);
+    }
+
+    [data-auth-login-root="noir"] .auth-login__wrap {
+      display: grid;
+      gap: 0.9rem;
+      padding: 1rem;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__card {
+      background: var(--panel);
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      padding: 1.2rem;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__header {
+      display: grid;
+      gap: 0.7rem;
+      padding: 0.5rem 0.3rem 0.2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    [data-auth-login-root="noir"] .auth-login__eyebrow {
+      color: #7f7f84;
+      font-size: 0.74rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    [data-auth-login-root="noir"] h2 {
+      margin: 0;
+      font-size: clamp(2.1rem, 4vw, 4rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+      text-transform: uppercase;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__subtitle {
+      max-width: 42ch;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__aside {
+      display: grid;
+      gap: 0.65rem;
+      padding: 1rem 0.25rem 0.35rem;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__aside p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.84rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__form {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__field {
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__label {
+      font-size: 0.74rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #6a6d74;
+    }
+
+    [data-auth-login-root="noir"] input {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--ink);
+      padding: 0.95rem 1rem;
+      font: inherit;
+      outline: none;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    [data-auth-login-root="noir"] input:focus {
+      border-color: rgba(16, 17, 20, 0.42);
+      box-shadow: 0 0 0 4px rgba(16, 17, 20, 0.08);
+      transform: translateY(-1px);
+    }
+
+    [data-auth-login-root="noir"] .auth-login__password-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__toggle {
+      border: 1px solid rgba(16, 17, 20, 0.14);
+      background: rgba(16, 17, 20, 0.03);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 0.9rem 1rem;
+      font: inherit;
+      cursor: pointer;
+      min-width: 6.8rem;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__toggle[aria-pressed="true"] {
+      background: var(--ink);
+      color: white;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__link {
+      color: var(--accent-2);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__link:hover {
+      text-decoration: underline;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__error {
+      min-height: 1.25rem;
+      margin: 0;
+      padding: 0.7rem 0.85rem;
+      border-radius: 14px;
+      background: rgba(162, 47, 49, 0.08);
+      color: var(--danger);
+      border: 1px solid rgba(162, 47, 49, 0.18);
+      font-size: 0.9rem;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__error:empty {
+      border-color: transparent;
+      background: transparent;
+      padding: 0;
+      min-height: 0;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__submit {
+      border: 0;
+      border-radius: 16px;
+      background: var(--accent);
+      color: white;
+      padding: 1rem 1.1rem;
+      font: inherit;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 160ms ease, opacity 160ms ease, background 160ms ease;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__submit:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: #202124;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__submit:disabled {
+      opacity: 0.68;
+      cursor: progress;
+    }
+
+    [data-auth-login-root="noir"] .auth-login__note {
+      margin: 0;
+      color: #d1cbc3;
+      font-size: 0.82rem;
+      line-height: 1.65;
+    }
+
+    @media (min-width: 700px) {
+      [data-auth-login-root="noir"] .auth-login__wrap {
+        grid-template-columns: 0.9fr 1.1fr;
+        padding: 1.2rem;
+      }
+
+      [data-auth-login-root="noir"] .auth-login__header,
+      [data-auth-login-root="noir"] .auth-login__aside {
+        padding: 1rem 1.05rem;
+      }
+    }
+  </style>
+
+  <div class="auth-login__wrap">
+    <div class="auth-login__header">
+      <div class="auth-login__eyebrow">{{LOGIN_METHOD}}</div>
+      <h2>{{LOGIN_TITLE}}</h2>
+      <p class="auth-login__subtitle">{{LOGIN_SUBTITLE}}</p>
+      <div class="auth-login__aside" aria-hidden="true">
+        <p>Quiet access, reduced chrome, fewer distractions.</p>
+        <p>Designed for direct sign-in and fast recovery links.</p>
+      </div>
+    </div>
+
+    <div class="auth-login__card">
+      <form class="auth-login__form" action="{{LOGIN_ACTION}}" method="post" novalidate>
+        <div class="auth-login__field">
+          <label class="auth-login__label" for="noir-login-identity">Email or handle</label>
+          <input id="noir-login-identity" name="identity" type="text" autocomplete="username" required placeholder="{{LOGIN_METHOD}}" />
+        </div>
+
+        <div class="auth-login__field">
+          <label class="auth-login__label" for="noir-login-password">Password</label>
+          <div class="auth-login__password-row">
+            <input id="noir-login-password" name="password" type="password" autocomplete="current-password" required placeholder="Enter password" />
+            <button class="auth-login__toggle" type="button" aria-pressed="false" aria-controls="noir-login-password">Show</button>
+          </div>
+        </div>
+
+        <div class="auth-login__row">
+          <label><input type="checkbox" name="remember" value="1" /> Remember me</label>
+          <a class="auth-login__link" href="{{FORGOT_HREF}}">Reset access</a>
+        </div>
+
+        <p class="auth-login__error" aria-live="polite" role="alert"></p>
+
+        <button class="auth-login__submit" type="submit">{{LOGIN_CTA_LABEL}}</button>
+      </form>
+
+      <p class="auth-login__note">The form validates in-browser first, then simulates a short submit window before re-enabling the button.</p>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.currentScript && document.currentScript.closest('[data-auth-login-root="noir"]');
+      if (!root) return;
+
+      const form = root.querySelector("form");
+      const password = root.querySelector('input[type="password"]');
+      const toggle = root.querySelector(".auth-login__toggle");
+      const errorNode = root.querySelector(".auth-login__error");
+      const submit = root.querySelector(".auth-login__submit");
+
+      function showError(message) {
+        errorNode.textContent = message || "";
+      }
+
+      function firstMissingLabel() {
+        const missing = Array.from(form.querySelectorAll("[required]")).find(function (field) {
+          return !field.value.trim();
+        });
+        return missing && missing.labels && missing.labels[0] ? missing.labels[0].textContent.trim() : "This field";
+      }
+
+      toggle.addEventListener("click", function () {
+        const reveal = password.type === "password";
+        password.type = reveal ? "text" : "password";
+        toggle.setAttribute("aria-pressed", String(reveal));
+        toggle.textContent = reveal ? "Hide" : "Show";
+        password.focus();
+      });
+
+      form.addEventListener("input", function () {
+        if (errorNode.textContent) showError("");
+      });
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        showError("");
+
+        if (!form.checkValidity()) {
+          showError(firstMissingLabel() + " is required.");
+          const invalid = form.querySelector("[required]:invalid") || form.querySelector("[required]");
+          if (invalid && typeof invalid.focus === "function") invalid.focus();
+          return;
+        }
+
+        submit.disabled = true;
+        submit.textContent = "Signing in...";
+
+        window.setTimeout(function () {
+          submit.disabled = false;
+          submit.textContent = "{{LOGIN_CTA_LABEL}}";
+        }, 850);
+      });
+    })();
+  </script>
+</section>
