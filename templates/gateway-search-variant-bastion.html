@@ -70,9 +70,34 @@
     <script id="seed-index" type="application/json">{{INDEX_SEED_JSON}}</script>
     <script>
       (function () {
-        const gatewayOrigin = String("{{GATEWAY_ORIGIN}}" || "").replace(/\/+$/, "");
-        const searchAction = "{{SEARCH_ACTION}}";
-        const indexAction = String("{{INDEX_ACTION}}" || "").trim();
+        function placeholderValue(value, fallback) {
+          const text = String(value || "").trim();
+          if (!text || /^\{\{.*\}\}$/.test(text)) return fallback;
+          return text;
+        }
+
+        function parseJson(text, fallback) {
+          try {
+            return JSON.parse(text);
+          } catch (_err) {
+            return fallback;
+          }
+        }
+
+        function extractIndexItems(data) {
+          if (Array.isArray(data)) return data;
+          if (!data || typeof data !== "object") return [];
+          return data.items || (data.data && data.data.items) || data.sites || data.entries || data.list || data.results || [];
+        }
+
+        const gatewayOrigin = placeholderValue("{{GATEWAY_ORIGIN}}", "").replace(/\/+$/, "");
+        const searchAction = placeholderValue("{{SEARCH_ACTION}}", "");
+        const indexAction = placeholderValue("{{INDEX_ACTION}}", "").trim();
+        const indexFetchMode = placeholderValue("{{INDEX_FETCH_MODE}}", "template_call").toLowerCase() === "public_read"
+          ? "public_read"
+          : "template_call";
+        const publicIndexEndpoint = placeholderValue("{{PUBLIC_INDEX_ENDPOINT}}", "/api/public/site-index");
+        const indexRequestBody = parseJson(placeholderValue("{{INDEX_REQUEST_BODY_JSON}}", "{}"), {});
         const indexLimit = Math.max(1, Number.parseInt("{{INDEX_LIMIT}}", 10) || 120);
 
         const form = document.getElementById("search-form");
@@ -169,29 +194,41 @@
 
         async function loadIndex() {
           const seedRaw = document.getElementById("seed-index");
-          const seedList = Array.isArray(safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", []))
-            ? safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", [])
-            : [];
+          const seedData = safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", []);
+          const seedList = Array.isArray(seedData) ? seedData : [];
           const seedNormalized = seedList.map(normalize).filter(Boolean);
-          if (!indexAction || !gatewayOrigin) {
+          if (!indexAction) {
             renderIndex(shuffle(seedNormalized));
             return;
           }
 
           try {
-            const response = await fetch(gatewayOrigin + "/template/call", {
-              method: "POST",
-              headers: { "content-type": "application/json" },
-              body: JSON.stringify({
-                action: indexAction,
-                payload: { limit: indexLimit },
-              }),
-            });
+            let response;
+            let rawItems = [];
+
+            if (indexFetchMode === "public_read") {
+              response = await fetch(publicIndexEndpoint, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(indexRequestBody && typeof indexRequestBody === "object" ? indexRequestBody : {}),
+              });
+            } else {
+              const templateCallUrl = (gatewayOrigin ? gatewayOrigin : "") + "/template/call";
+              response = await fetch(templateCallUrl, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                  action: indexAction,
+                  payload: { limit: indexLimit },
+                }),
+              });
+            }
+
             const data = await response.json().catch(function () { return {}; });
             if (!response.ok) {
               throw new Error((data && (data.error || data.code)) || "index_fetch_failed");
             }
-            const rawItems = data.items || (data.data && data.data.items) || data.sites || [];
+            rawItems = extractIndexItems(data);
             const normalized = Array.isArray(rawItems) ? rawItems.map(normalize).filter(Boolean) : [];
             renderIndex(shuffle(normalized.length ? normalized : seedNormalized));
           } catch (_err) {
