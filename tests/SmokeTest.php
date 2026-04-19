@@ -31,6 +31,24 @@ $renderer = new TemplateRenderer($registry, $metrics, $scanner);
 $templates = $registry->all();
 assert(count($templates) >= 2, 'Expected at least two templates in catalog.');
 
+$shellDefinition = $registry->get('gateway_search_shell_core');
+assert($shellDefinition->metadata() === [
+    'gatewayMinVersion' => '1.4.0',
+    'compatibility' => [
+        'gateway' => '^1.4',
+        'runtime' => 'browser',
+    ],
+    'releaseChannel' => 'stable',
+]);
+assert(str_contains((string) json_encode($shellDefinition), '"metadata"'));
+assert(str_contains((string) json_encode($shellDefinition), '"releaseChannel":"stable"'));
+
+$signalDefinition = $registry->get('gateway_search_variant_signal');
+assert($signalDefinition->metadata()['releaseChannel'] === 'beta');
+
+$moduleReadmeDefinition = $registry->get('module_readme');
+assert($moduleReadmeDefinition->metadata() === [], 'Legacy entries should still work without metadata.');
+
 $readme = $renderer->render('module_readme', [
     'MODULE_NAME' => 'BlackCat Smoke',
     'DESCRIPTION' => 'Testing automation wiring.',
@@ -72,9 +90,10 @@ $publicIndexTemplate = $renderer->render('gateway_search_variant_signal', [
     'INDEX_LIMIT' => '24',
     'INDEX_SEED_JSON' => '[]',
 ]);
-assert(str_contains($publicIndexTemplate, 'String("public_read" || "template_call")'));
-assert(str_contains($publicIndexTemplate, 'String("/api/public/site-index" || "/api/public/site-index")'));
-assert(str_contains($publicIndexTemplate, 'safeJson(String("{}" || "{}"), {})'));
+assert(str_contains($publicIndexTemplate, 'indexFetchMode'));
+assert(str_contains($publicIndexTemplate, 'public_read'));
+assert(str_contains($publicIndexTemplate, 'publicIndexEndpoint'));
+assert(str_contains($publicIndexTemplate, 'indexRequestBodyJson'));
 
 $menuFragment = $renderer->render('gateway_component_menu_pulse', [
     'SITE_TITLE' => 'Darkmesh Search',

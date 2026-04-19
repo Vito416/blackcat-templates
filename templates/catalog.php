@@ -39,6 +39,14 @@ return [
         'file' => __DIR__ . '/gateway-search-shell-core.html',
         'tags' => ['gateway', 'search', 'ux', 'shell', 'component-kit', 'public-template'],
         'integrations' => ['blackcat-darkmesh-gateway', 'blackcat-darkmesh-ao', 'blackcat-darkmesh-write'],
+        'metadata' => [
+            'gatewayMinVersion' => '1.4.0',
+            'compatibility' => [
+                'gateway' => '^1.4',
+                'runtime' => 'browser',
+            ],
+            'releaseChannel' => 'stable',
+        ],
         'placeholders' => [
             ['token' => 'SITE_TITLE', 'description' => 'Document title used by browser tabs.', 'required' => true],
             ['token' => 'GATEWAY_ORIGIN', 'description' => 'Gateway origin used for API calls.', 'required' => true],
@@ -580,6 +588,14 @@ return [
         'file' => __DIR__ . '/gateway-search-variant-signal.html',
         'tags' => ['gateway', 'search', 'ux', 'public-template'],
         'integrations' => ['blackcat-darkmesh-gateway', 'blackcat-darkmesh-ao', 'blackcat-darkmesh-write'],
+        'metadata' => [
+            'gatewayMinVersion' => '1.4.0',
+            'compatibility' => [
+                'gateway' => '^1.4',
+                'runtime' => 'browser',
+            ],
+            'releaseChannel' => 'beta',
+        ],
         'placeholders' => [
             ['token' => 'SITE_TITLE', 'description' => 'Public title shown to end users.', 'required' => true],
             ['token' => 'SITE_TAGLINE', 'description' => 'Short subtitle under the title.', 'default' => 'Discover verified pages across the mesh.'],
@@ -602,6 +618,14 @@ return [
         'file' => __DIR__ . '/gateway-search-variant-bastion.html',
         'tags' => ['gateway', 'search', 'ux', 'public-template'],
         'integrations' => ['blackcat-darkmesh-gateway', 'blackcat-darkmesh-ao', 'blackcat-darkmesh-write'],
+        'metadata' => [
+            'gatewayMinVersion' => '1.4.0',
+            'compatibility' => [
+                'gateway' => '^1.4',
+                'runtime' => 'browser',
+            ],
+            'releaseChannel' => 'beta',
+        ],
         'placeholders' => [
             ['token' => 'SITE_TITLE', 'description' => 'Public title shown to end users.', 'required' => true],
             ['token' => 'SITE_TAGLINE', 'description' => 'Short subtitle under the title.', 'default' => 'Route requests safely through the gateway boundary.'],
@@ -624,6 +648,14 @@ return [
         'file' => __DIR__ . '/gateway-search-variant-horizon.html',
         'tags' => ['gateway', 'search', 'ux', 'public-template'],
         'integrations' => ['blackcat-darkmesh-gateway', 'blackcat-darkmesh-ao', 'blackcat-darkmesh-write'],
+        'metadata' => [
+            'gatewayMinVersion' => '1.4.0',
+            'compatibility' => [
+                'gateway' => '^1.4',
+                'runtime' => 'browser',
+            ],
+            'releaseChannel' => 'stable',
+        ],
         'placeholders' => [
             ['token' => 'SITE_TITLE', 'description' => 'Public title shown to end users.', 'required' => true],
             ['token' => 'SITE_TAGLINE', 'description' => 'Short subtitle under the title.', 'default' => 'Search by route, domain, or page id.'],
