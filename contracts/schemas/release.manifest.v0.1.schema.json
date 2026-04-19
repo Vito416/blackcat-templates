@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://blackcat.local/contracts/schemas/release.manifest.v0.1.schema.json",
+  "title": "BlackCat Templates Release Manifest v0.1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["releaseVersion", "generatedAt", "variants"],
+  "properties": {
+    "releaseVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "variants": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["variant", "templateId", "file", "sha256", "bytes"],
+        "properties": {
+          "variant": {
+            "type": "string",
+            "minLength": 1
+          },
+          "templateId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

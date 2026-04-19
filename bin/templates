@@ -8,6 +8,7 @@ use BlackCat\Templates\Config\TemplateConfig;
 use BlackCat\Templates\Registry\TemplateRegistry;
 use BlackCat\Templates\Renderer\TemplateRenderer;
 use BlackCat\Templates\Release\GatewayReleaseBuilder;
+use BlackCat\Templates\Release\ReleaseManifestValidator;
 use BlackCat\Templates\Security\SecurityScanner;
 use BlackCat\Templates\Telemetry\TemplateMetrics;
 use RuntimeException;
@@ -28,6 +29,7 @@ $scanner = new SecurityScanner($config);
 $registry = new TemplateRegistry($config, $metrics);
 $renderer = new TemplateRenderer($registry, $metrics, $scanner);
 $releaseBuilder = new GatewayReleaseBuilder($renderer);
+$releaseManifestValidator = new ReleaseManifestValidator();
 
 $exitCode = 0;
 
@@ -147,6 +149,25 @@ switch ($command) {
             $exitCode = 1;
         }
         break;
+    case 'release:validate':
+        $manifestPath = $args[0] ?? null;
+        if ($manifestPath === null) {
+            fwrite(STDERR, "Usage: templates <config> release:validate <manifest-file>\n");
+            $exitCode = 1;
+            break;
+        }
+
+        try {
+            $result = $releaseManifestValidator->validateFile($manifestPath);
+            echo 'Manifest valid: ' . $manifestPath . PHP_EOL;
+            echo '  releaseVersion: ' . $result['releaseVersion'] . PHP_EOL;
+            echo '  generatedAt: ' . $result['generatedAt'] . PHP_EOL;
+            echo '  variants: ' . count($result['variants']) . PHP_EOL;
+        } catch (Throwable $exception) {
+            fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+            $exitCode = 1;
+        }
+        break;
     case 'security:scan':
         $targetId = $args[0] ?? null;
         $definitions = $targetId ? [$registry->get($targetId)] : $registry->all();
@@ -179,6 +200,7 @@ Commands:
   gateway:compose <profile> <data>   Compose shell + component fragments into one gateway search page.
   gateway:release:build <profile[,profile...]> <data> <output-dir> <version>
                                      Build local gateway release artifacts and emit a manifest.
+  release:validate <manifest-file>   Validate a release manifest JSON file.
   security:scan [templateId]         Run security/integration checks for one or all templates.
   integrations:list                  Output configured integration targets.
 USAGE;
