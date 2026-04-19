@@ -1,0 +1,17 @@
+{
+  "name": "blackcat-darkmesh-templates",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "test:smoke": "node --import tsx tests/smoke.test.ts",
+    "test": "npm run lint && npm run test:smoke",
+    "cli": "node --import tsx src/cli.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsx": "^4.20.6",
+    "typescript": "^5.8.3"
+  }
+}

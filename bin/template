@@ -1,36 +1,19 @@
-#!/usr/bin/env php
-<?php
-declare(strict_types=1);
+#!/usr/bin/env bash
+set -euo pipefail
 
-require __DIR__ . '/../src/autoload.php';
+if [[ "${1:-}" != "readme" ]]; then
+  echo "Usage: template readme <Name> <Description>" >&2
+  exit 1
+fi
 
-use BlackCat\Templates\Config\TemplateConfig;
-use BlackCat\Templates\Registry\TemplateRegistry;
-use BlackCat\Templates\Renderer\TemplateRenderer;
-use BlackCat\Templates\Security\SecurityScanner;
-use BlackCat\Templates\Telemetry\TemplateMetrics;
+NAME="${2:-}"
+DESCRIPTION="${3:-}"
+if [[ -z "$NAME" || -z "$DESCRIPTION" ]]; then
+  echo "Usage: template readme <Name> <Description>" >&2
+  exit 1
+fi
 
-$command = $argv[1] ?? 'help';
-$args = array_slice($argv, 2);
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG="${BLACKCAT_TEMPLATES_CONFIG:-$DIR/../config/example.templates.json}"
 
-if ($command !== 'readme') {
-    fwrite(STDERR, "Usage: template readme <Name> <Description>\n");
-    exit(1);
-}
-
-[$name, $description] = $args + [null, null];
-if ($name === null || $description === null) {
-    fwrite(STDERR, "Usage: template readme <Name> <Description>\n");
-    exit(1);
-}
-
-$configPath = getenv('BLACKCAT_TEMPLATES_CONFIG') ?? __DIR__ . '/../config/example.templates.php';
-$config = TemplateConfig::fromFile($configPath);
-$metrics = new TemplateMetrics($config->telemetryFile());
-$registry = new TemplateRegistry($config, $metrics);
-$renderer = new TemplateRenderer($registry, $metrics, new SecurityScanner($config));
-
-echo $renderer->render('module_readme', [
-    'MODULE_NAME' => $name,
-    'DESCRIPTION' => $description,
-]);
+node --import "$DIR/../node_modules/tsx/dist/loader.mjs" "$DIR/../src/cli.ts" "$CONFIG" template:run module_readme "{\"MODULE_NAME\":\"$NAME\",\"DESCRIPTION\":\"$DESCRIPTION\"}"

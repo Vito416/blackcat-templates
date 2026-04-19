@@ -47,7 +47,7 @@ Example builder mapping:
 Direct variant render:
 
 ```bash
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_signal \
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_signal \
   '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' \
   var/search-signal.html
 ```
@@ -55,7 +55,7 @@ php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_varia
 Composed page render:
 
 ```bash
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose pulse \
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose pulse \
   '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' \
   var/gateway-search-pulse.html
 ```
@@ -71,9 +71,9 @@ Each family has menu/search/results/footer so teams can keep consistent visual i
 ## Compose command
 
 ```bash
-export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/config/example.templates.php
+export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/config/example.templates.json
 
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose pulse \
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose pulse \
   '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' \
   var/gateway-search-pulse.html
 ```

@@ -34,28 +34,29 @@ This repo now includes:
 
 ## Quick Start
 ```bash
-export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/blackcat-darkmesh-templates/config/example.templates.php
+npm ci
+export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/blackcat-darkmesh-templates/config/example.templates.json
 
 # Catalog / metadata
-php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG catalog:list
-php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG catalog:show gateway_search_variant_signal
+blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG catalog:list
+blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG catalog:show gateway_search_variant_signal
 
 # Render docs template
-php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run module_readme '{"MODULE_NAME":"BlackCat Payments","DESCRIPTION":"Gateway + AO write boundary"}'
+blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run module_readme '{"MODULE_NAME":"BlackCat Payments","DESCRIPTION":"Gateway + AO write boundary"}'
 
 # Render one gateway-search variant
-php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run gateway_search_variant_bastion '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/gateway-search-bastion.html
+blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG template:run gateway_search_variant_bastion '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/gateway-search-bastion.html
 
 # Compose a chunked front-end page (shell + fragments)
-php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG gateway:compose pulse '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/gateway-search-pulse.html
+blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG gateway:compose pulse '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/gateway-search-pulse.html
 
 # Security checks
-php blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG security:scan
+blackcat-darkmesh-templates/bin/templates $BLACKCAT_TEMPLATES_CONFIG security:scan
 ```
 
 Backwards-compatible shorthand:
 ```bash
-php blackcat-darkmesh-templates/bin/template readme "BlackCat Foo" "Short description"
+blackcat-darkmesh-templates/bin/template readme "BlackCat Foo" "Short description"
 ```
 
 ## Telemetry
@@ -64,7 +65,7 @@ php blackcat-darkmesh-templates/bin/template readme "BlackCat Foo" "Short descri
 
 ## Testing
 ```bash
-php blackcat-darkmesh-templates/tests/SmokeTest.php
+npm test
 ```
 Smoke test boots registry, renders templates, runs security scan, and verifies metrics output.
 

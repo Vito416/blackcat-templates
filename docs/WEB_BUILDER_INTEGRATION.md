@@ -4,7 +4,7 @@ This guide shows how `blackcat-darkmesh-web` can consume the templates repo as a
 
 ## What the builder should read
 
-- Template IDs from `templates/catalog.php`
+- Template IDs from `templates/catalog.json`
 - Placeholder/token maps for each chosen template
 - Component profile names for composed gateway pages
 - Release metadata emitted by the pinned release workflow
@@ -41,7 +41,7 @@ This guide shows how `blackcat-darkmesh-web` can consume the templates repo as a
 Direct variant:
 
 ```bash
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_signal \
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_signal \
   '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' \
   var/search-signal.html
 ```
@@ -49,7 +49,7 @@ php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_varia
 Component kit:
 
 ```bash
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose pulse \
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose pulse \
   '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' \
   var/search-pulse.html
 ```

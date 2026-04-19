@@ -1,0 +1,23 @@
+{
+  "config_profile": {
+    "file": "profiles.stub.json",
+    "environment": "development"
+  },
+  "templates_dir": "../templates",
+  "catalog_file": "../templates/catalog.json",
+  "storage_dir": "../var",
+  "integrations": {
+    "gateway": "../../blackcat-darkmesh-gateway/README.md",
+    "database": "../../blackcat-darkmesh-write/README.md",
+    "ao": "../../blackcat-darkmesh-ao/README.md",
+    "web": "../../blackcat-darkmesh-web/README.md"
+  },
+  "security": {
+    "allowed_extensions": ["md", "mdx", "html", "json", "yml", "yaml"],
+    "disallow_php": true,
+    "require_integrations": ["blackcat-darkmesh-gateway"]
+  },
+  "telemetry": {
+    "prometheus_file": "../var/metrics.prom"
+  }
+}

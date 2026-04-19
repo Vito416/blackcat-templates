@@ -28,18 +28,18 @@ Component-kit profiles (recommended):
 ## Render local artifacts
 
 ```bash
-export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/config/example.templates.php
+export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/config/example.templates.json
 
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_signal '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route","INDEX_ACTION":"public.site-index","INDEX_FETCH_MODE":"public_read","PUBLIC_INDEX_ENDPOINT":"/api/public/site-index","INDEX_REQUEST_BODY_JSON":"{}"}' var/search-signal.html
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_bastion '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route","INDEX_ACTION":"public.site-index","INDEX_FETCH_MODE":"public_read","PUBLIC_INDEX_ENDPOINT":"/api/public/site-index","INDEX_REQUEST_BODY_JSON":"{}"}' var/search-bastion.html
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_horizon '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-horizon.html
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_signal '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route","INDEX_ACTION":"public.site-index","INDEX_FETCH_MODE":"public_read","PUBLIC_INDEX_ENDPOINT":"/api/public/site-index","INDEX_REQUEST_BODY_JSON":"{}"}' var/search-signal.html
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_bastion '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route","INDEX_ACTION":"public.site-index","INDEX_FETCH_MODE":"public_read","PUBLIC_INDEX_ENDPOINT":"/api/public/site-index","INDEX_REQUEST_BODY_JSON":"{}"}' var/search-bastion.html
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_horizon '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-horizon.html
 
 # Compose shell + fragments (recommended)
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose pulse '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-pulse.html
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose atlas '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-atlas.html
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose lumen '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-lumen.html
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose pulse '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-pulse.html
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose atlas '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-atlas.html
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose lumen '{"SITE_TITLE":"Darkmesh Search","SITE_TAGLINE":"Composable public UX","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-lumen.html
 
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" security:scan
+bin/templates "$BLACKCAT_TEMPLATES_CONFIG" security:scan
 ```
 
 ## Pinned release build

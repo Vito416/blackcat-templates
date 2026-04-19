@@ -6,149 +6,82 @@ on:
   pull_request:
 
 jobs:
-  php-smoke:
+  templates-ts:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup Node
+        uses: actions/setup-node@v6
         with:
-          php-version: "8.3"
+          node-version: "22"
+          cache: npm
 
-      - name: PHP lint
-        run: |
-          find src bin config tests -type f \( -name "*.php" \) -print0 | xargs -0 -n1 php -l
+      - name: Install deps
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run lint
 
       - name: Smoke test
-        run: php tests/SmokeTest.php
+        run: npm run test:smoke
 
       - name: Release determinism check
         run: |
-          set -euo pipefail
+          CONFIG=config/example.templates.json
+          PAYLOAD=tests/fixtures/release-payload.json
+          PROFILES=$(paste -sd, tests/fixtures/release-profiles.txt)
 
-          export BLACKCAT_TEMPLATES_CONFIG="$PWD/config/example.templates.php"
+          rm -rf var/release-a var/release-b
+          bin/templates "$CONFIG" gateway:release:build "$PROFILES" "@$PAYLOAD" var/release-a ci
+          bin/templates "$CONFIG" gateway:release:build "$PROFILES" "@$PAYLOAD" var/release-b ci
 
-          mapfile -t release_profiles < tests/fixtures/release-profiles.txt
-          payload_file="tests/fixtures/release-payload.json"
+          node - <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
 
-          build_release() {
-            local output_dir="$1"
-            php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:release:build "${release_profiles[@]}" "@${payload_file}" "$output_dir" "ci-determinism"
+          function hashFile(path) {
+            const bytes = fs.readFileSync(path);
+            return crypto.createHash('sha256').update(bytes).digest('hex');
           }
 
-          run_one="$(mktemp -d)"
-          run_two="$(mktemp -d)"
-
-          build_release "$run_one"
-          build_release "$run_two"
-
-          php -r '
-          declare(strict_types=1);
-
-          if ($argc !== 5) {
-              fwrite(STDERR, "Expected manifest paths and output directories.\n");
-              exit(1);
+          function readJson(path) {
+            return JSON.parse(fs.readFileSync(path, 'utf8'));
           }
 
-          [$script, $manifestOnePath, $manifestTwoPath, $runOneDir, $runTwoDir] = $argv;
-
-          $loadJson = static function (string $path): array {
-              $raw = file_get_contents($path);
-              if ($raw === false) {
-                  throw new RuntimeException("Unable to read: " . $path);
-              }
-
-              $data = json_decode($raw, true);
-              if (!is_array($data)) {
-                  throw new RuntimeException("Invalid JSON in: " . $path);
-              }
-
-              return $data;
-          };
-
-          $canonicalize = null;
-          $canonicalize = static function (mixed $value) use (&$canonicalize): mixed {
-              if (!is_array($value)) {
-                  return $value;
-              }
-
-              if (array_is_list($value)) {
-                  return array_map($canonicalize, $value);
-              }
-
-              ksort($value, SORT_STRING);
-              foreach ($value as $key => $item) {
-                  $value[$key] = $canonicalize($item);
-              }
-
-              return $value;
-          };
-
-          $assertShape = static function (array $manifest): void {
-              $expectedTopLevel = ["generatedAt", "releaseVersion", "variants"];
-              $keys = array_keys($manifest);
-              sort($keys, SORT_STRING);
-              sort($expectedTopLevel, SORT_STRING);
-              if ($keys !== $expectedTopLevel) {
-                  throw new RuntimeException("Manifest top-level shape changed.");
-              }
-
-              if (!is_array($manifest["variants"]) || $manifest["variants"] === []) {
-                  throw new RuntimeException("Manifest variants must be a non-empty object.");
-              }
-
-              foreach ($manifest["variants"] as $variantKey => $variant) {
-                  if (!is_array($variant)) {
-                      throw new RuntimeException("Variant entry must be an object: " . $variantKey);
-                  }
-
-                  $variantKeys = array_keys($variant);
-                  sort($variantKeys, SORT_STRING);
-                  $expectedVariantKeys = ["bytes", "file", "sha256", "templateId", "variant"];
-                  sort($expectedVariantKeys, SORT_STRING);
-                  if ($variantKeys !== $expectedVariantKeys) {
-                      throw new RuntimeException("Variant shape changed for: " . $variantKey);
-                  }
-              }
-          };
-
-          $assertArtifactHashes = static function (array $manifest, string $outputDir): void {
-              foreach ($manifest["variants"] as $variantKey => $variant) {
-                  $filePath = $outputDir . DIRECTORY_SEPARATOR . $variant["file"];
-                  if (!is_file($filePath)) {
-                      throw new RuntimeException("Missing artifact file: " . $filePath);
-                  }
-
-                  $fileHash = hash_file("sha256", $filePath);
-                  if ($fileHash !== $variant["sha256"]) {
-                      throw new RuntimeException("Artifact hash mismatch for " . $variantKey);
-                  }
-
-                  $fileSize = filesize($filePath);
-                  if ($fileSize !== (int) $variant["bytes"]) {
-                      throw new RuntimeException("Artifact size mismatch for " . $variantKey);
-                  }
-              }
-          };
-
-          $manifestOne = $loadJson($manifestOnePath);
-          $manifestTwo = $loadJson($manifestTwoPath);
-
-          $assertShape($manifestOne);
-          $assertShape($manifestTwo);
-          $assertArtifactHashes($manifestOne, $runOneDir);
-          $assertArtifactHashes($manifestTwo, $runTwoDir);
-
-          unset($manifestOne["generatedAt"], $manifestTwo["generatedAt"]);
-
-          $canonicalOne = $canonicalize($manifestOne);
-          $canonicalTwo = $canonicalize($manifestTwo);
-
-          if ($canonicalOne !== $canonicalTwo) {
-              throw new RuntimeException("Release manifest shape or contents are not deterministic.");
+          function sortedKeys(obj) {
+            return Object.keys(obj).sort((a, b) => a.localeCompare(b));
           }
 
-          echo "Gateway release determinism check passed\n";
-          '
+          const a = readJson('var/release-a/manifest.json');
+          const b = readJson('var/release-b/manifest.json');
+
+          const keysA = sortedKeys(a.variants || {});
+          const keysB = sortedKeys(b.variants || {});
+          if (JSON.stringify(keysA) !== JSON.stringify(keysB)) {
+            throw new Error(`variant key mismatch: ${keysA.join(',')} != ${keysB.join(',')}`);
+          }
+
+          for (const key of keysA) {
+            const one = a.variants[key];
+            const two = b.variants[key];
+            for (const field of ['variant', 'templateId', 'file', 'sha256', 'bytes']) {
+              if (JSON.stringify(one[field]) !== JSON.stringify(two[field])) {
+                throw new Error(`manifest field mismatch at ${key}.${field}`);
+              }
+            }
+
+            const fileA = `var/release-a/${one.file}`;
+            const fileB = `var/release-b/${two.file}`;
+            if (hashFile(fileA) !== hashFile(fileB)) {
+              throw new Error(`artifact hash mismatch for ${key}`);
+            }
+          }
+
+          const stableA = { ...a, generatedAt: '__IGNORED__' };
+          const stableB = { ...b, generatedAt: '__IGNORED__' };
+          if (JSON.stringify(stableA) !== JSON.stringify(stableB)) {
+            throw new Error('manifest mismatch outside generatedAt');
+          }
+          NODE

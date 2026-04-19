@@ -1,8 +1,8 @@
 # Templates – Roadmap
 
 ## Stage 1 – Foundation ✅
-- Catalog + config loader (`config/example.templates.php`) with deterministic CLI rendering.
-- CLI `bin/templates` (`catalog:list|show`, `template:run`, `security:scan`, `integrations:list`) plus compatibility wrapper `bin/template`.
+- Catalog + config loader (`config/example.templates.json`) with deterministic CLI rendering.
+- TypeScript CLI `bin/templates` (`catalog:list|show`, `template:run`, `security:scan`, `integrations:list`) plus compatibility wrapper `bin/template`.
 - Telemetry (`var/metrics.prom`) and smoke tests for rendering + scanner behavior.
 
 ## Stage 2 – Gateway Search Templates ✅
@@ -21,14 +21,14 @@
 - Added example payloads for `auth.login` and gateway search shell composition.
 - Locked the direction to TS/JS frontend-logic blocks with worker-only secret/sign boundaries.
 
-## Stage 5 – Release Automation (next)
-- Add `gateway:release:build` plus pinned release-map generation (`variant -> txid/hash`) for gateway operators.
-- Add CI checks that rendered bundles remain deterministic across runs.
-- Add schema validation for template release metadata consumed by gateway config.
+## Stage 5 – Release Automation ✅
+- Added `gateway:release:build` plus pinned release-map generation (`variant -> txid/hash`) for gateway operators.
+- Added CI checks that rendered bundles remain deterministic across runs.
+- Added `release:validate` command and schema contract for release manifest structure.
 
-## Stage 6 – Template Marketplace Readiness (next)
-- Add formal template metadata (compatibility matrix, required gateway minimum version).
-- Add release notes/changelog per template variant.
-- Add starter snippets for `blackcat-darkmesh-web` builder integration using `docs/WEB_BUILDER_INTEGRATION.md`.
-- Add builder-side mapping for direct variants -> component profiles so sites can migrate without changing token values.
-- Add release-map consumption examples for pinned web builds.
+## Stage 6 – Template Marketplace Readiness (in progress)
+- Added formal template metadata fields (compatibility matrix, required gateway minimum version, release channel).
+- Added release notes/changelog per template variant.
+- Added starter snippets for `blackcat-darkmesh-web` builder integration using `docs/WEB_BUILDER_INTEGRATION.md`.
+- Added builder-side mapping for direct variants -> component profiles so sites can migrate without changing token values.
+- Added release-map consumption examples for pinned web builds.
