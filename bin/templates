@@ -7,6 +7,7 @@ require __DIR__ . '/../src/autoload.php';
 use BlackCat\Templates\Config\TemplateConfig;
 use BlackCat\Templates\Registry\TemplateRegistry;
 use BlackCat\Templates\Renderer\TemplateRenderer;
+use BlackCat\Templates\Release\GatewayReleaseBuilder;
 use BlackCat\Templates\Security\SecurityScanner;
 use BlackCat\Templates\Telemetry\TemplateMetrics;
 use RuntimeException;
@@ -26,6 +27,7 @@ $metrics = new TemplateMetrics($config->telemetryFile());
 $scanner = new SecurityScanner($config);
 $registry = new TemplateRegistry($config, $metrics);
 $renderer = new TemplateRenderer($registry, $metrics, $scanner);
+$releaseBuilder = new GatewayReleaseBuilder($renderer);
 
 $exitCode = 0;
 
@@ -106,13 +108,40 @@ switch ($command) {
 
         try {
             $payload = parsePayload($payloadArg);
-            $rendered = composeGatewayProfile($profileId, $payload, $renderer);
+            $rendered = $releaseBuilder->composeProfile($profileId, $payload);
             if ($destination !== null) {
                 writeOutput($destination, $rendered);
                 echo "Gateway profile rendered to {$destination}" . PHP_EOL;
             } else {
                 echo $rendered . PHP_EOL;
             }
+        } catch (Throwable $exception) {
+            fwrite(STDERR, $exception->getMessage() . PHP_EOL);
+            $exitCode = 1;
+        }
+        break;
+    case 'gateway:release:build':
+        if (count($args) < 4) {
+            fwrite(STDERR, "Usage: templates <config> gateway:release:build <profile[,profile...]> <JSON payload|@file> <output-dir> <version>\n");
+            $exitCode = 1;
+            break;
+        }
+
+        $releaseVersion = array_pop($args);
+        $outputDir = array_pop($args);
+        $payloadArg = array_pop($args);
+        $profiles = normalizeReleaseProfiles($args);
+
+        if ($profiles === []) {
+            fwrite(STDERR, "At least one profile must be provided.\n");
+            $exitCode = 1;
+            break;
+        }
+
+        try {
+            $payload = parsePayload($payloadArg);
+            $manifestPath = $releaseBuilder->build($profiles, $payload, $outputDir, $releaseVersion);
+            echo "Gateway release manifest written to {$manifestPath}" . PHP_EOL;
         } catch (Throwable $exception) {
             fwrite(STDERR, $exception->getMessage() . PHP_EOL);
             $exitCode = 1;
@@ -148,6 +177,8 @@ Commands:
   catalog:show <templateId>          Show template metadata + placeholders.
   template:run <templateId> <data>   Render template with JSON payload (use @file for file input) and optional destination path.
   gateway:compose <profile> <data>   Compose shell + component fragments into one gateway search page.
+  gateway:release:build <profile[,profile...]> <data> <output-dir> <version>
+                                     Build local gateway release artifacts and emit a manifest.
   security:scan [templateId]         Run security/integration checks for one or all templates.
   integrations:list                  Output configured integration targets.
 USAGE;
@@ -188,6 +219,31 @@ function parsePayload(string $argument): array
     return $normalized;
 }
 
+/**
+ * @param list<string> $profiles
+ * @return list<string>
+ */
+function normalizeReleaseProfiles(array $profiles): array
+{
+    if ($profiles === []) {
+        return [];
+    }
+
+    $normalized = [];
+    foreach ($profiles as $profileArg) {
+        foreach (explode(',', (string) $profileArg) as $profile) {
+            $profile = trim($profile);
+            if ($profile === '') {
+                continue;
+            }
+
+            $normalized[] = $profile;
+        }
+    }
+
+    return array_values(array_unique($normalized));
+}
+
 function writeOutput(string $destination, string $content): void
 {
     $dir = dirname($destination);
@@ -200,61 +256,4 @@ function writeOutput(string $destination, string $content): void
     if (file_put_contents($destination, $content) === false) {
         throw new RuntimeException('Unable to write rendered output: ' . $destination);
     }
-}
-
-/**
- * @param array<string,string> $payload
- */
-function composeGatewayProfile(string $profile, array $payload, TemplateRenderer $renderer): string
-{
-    $profiles = [
-        'pulse' => [
-            'menu' => 'gateway_component_menu_pulse',
-            'search' => 'gateway_component_search_pulse',
-            'results' => 'gateway_component_results_pulse',
-            'footer' => 'gateway_component_footer_pulse',
-            'shell_body_class' => '',
-            'shell_extra_css' => '',
-        ],
-        'atlas' => [
-            'menu' => 'gateway_component_menu_forge',
-            'search' => 'gateway_component_search_atlas',
-            'results' => 'gateway_component_results_atlas',
-            'footer' => 'gateway_component_footer_atlas',
-            'shell_body_class' => 'text-black',
-            'shell_extra_css' => ':root { --mesh-bg-1: #ffcd38; --mesh-bg-2: #ff7e1f; --mesh-fx-a: rgba(255,255,255,0.35); --mesh-fx-b: rgba(0,0,0,0.15); }',
-        ],
-        'lumen' => [
-            'menu' => 'gateway_component_menu_zenith',
-            'search' => 'gateway_component_search_lumen',
-            'results' => 'gateway_component_results_lumen',
-            'footer' => 'gateway_component_footer_lumen',
-            'shell_body_class' => 'text-slate-900',
-            'shell_extra_css' => ':root { --mesh-bg-1: #dfe7ff; --mesh-bg-2: #9db8ff; --mesh-fx-a: rgba(255,255,255,0.45); --mesh-fx-b: rgba(164,179,255,0.30); }',
-        ],
-    ];
-
-    $selected = $profiles[strtolower($profile)] ?? null;
-    if ($selected === null) {
-        throw new RuntimeException('Unknown gateway profile: ' . $profile . '. Expected pulse|atlas|lumen.');
-    }
-
-    $menu = $renderer->render($selected['menu'], $payload);
-    $search = $renderer->render($selected['search'], $payload);
-    $results = $renderer->render($selected['results'], $payload);
-    $footer = $renderer->render($selected['footer'], $payload);
-
-    $shellPayload = $payload;
-    $shellPayload['MENU_COMPONENT'] = $menu;
-    $shellPayload['SEARCH_COMPONENT'] = $search;
-    $shellPayload['RESULTS_COMPONENT'] = $results;
-    $shellPayload['FOOTER_COMPONENT'] = $footer;
-    if (!array_key_exists('SHELL_BODY_CLASS', $shellPayload)) {
-        $shellPayload['SHELL_BODY_CLASS'] = $selected['shell_body_class'];
-    }
-    if (!array_key_exists('SHELL_EXTRA_CSS', $shellPayload)) {
-        $shellPayload['SHELL_EXTRA_CSS'] = $selected['shell_extra_css'];
-    }
-
-    return $renderer->render('gateway_search_shell_core', $shellPayload);
 }
