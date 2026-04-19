@@ -15,13 +15,23 @@ Component-kit profiles (recommended):
 - `atlas` (brutalist, sharp, bold)
 - `lumen` (editorial, serif, minimal)
 
+## Public index path
+
+- OTP-first trust stays on `/template/call` for route resolution and other protected backend actions.
+- The public index list can move to the read-only path `/api/public/site-index` when `INDEX_FETCH_MODE=public_read`.
+- Default placeholder values:
+  - `INDEX_FETCH_MODE=template_call`
+  - `PUBLIC_INDEX_ENDPOINT=/api/public/site-index`
+  - `INDEX_REQUEST_BODY_JSON={}`
+- Keep `INDEX_REQUEST_BODY_JSON` limited to public catalog input; do not place secrets or OTP-bearing data in it.
+
 ## Render local artifacts
 
 ```bash
 export BLACKCAT_TEMPLATES_CONFIG=$(pwd)/config/example.templates.php
 
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_signal '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-signal.html
-php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_bastion '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-bastion.html
+php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_signal '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route","INDEX_ACTION":"public.site-index","INDEX_FETCH_MODE":"public_read","PUBLIC_INDEX_ENDPOINT":"/api/public/site-index","INDEX_REQUEST_BODY_JSON":"{}"}' var/search-signal.html
+php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_bastion '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route","INDEX_ACTION":"public.site-index","INDEX_FETCH_MODE":"public_read","PUBLIC_INDEX_ENDPOINT":"/api/public/site-index","INDEX_REQUEST_BODY_JSON":"{}"}' var/search-bastion.html
 php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" template:run gateway_search_variant_horizon '{"SITE_TITLE":"Darkmesh Search","GATEWAY_ORIGIN":"https://gateway.example","SEARCH_ACTION":"public.resolve-route"}' var/search-horizon.html
 
 # Compose shell + fragments (recommended)
@@ -31,6 +41,16 @@ php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:compose lumen '{"SITE_TIT
 
 php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" security:scan
 ```
+
+## Pinned release build
+
+Use `gateway:release:build` when the rendered artifacts are ready to be frozen into a release map. The command is the pinning step in the workflow: it should capture the exact rendered bytes, derive the matching `sha256`, record the release `txId`, and emit a release map that gateway config can pin verbatim.
+
+Workflow:
+1. Render the target variant or component bundle.
+2. Verify the bytes and hashes you intend to publish.
+3. Run `gateway:release:build` to produce the pinned release map.
+4. Commit the release map before moving gateway config to the new release.
 
 ## Publish flow
 

@@ -11,6 +11,12 @@ This repo now includes:
   - `gateway_search_shell_core` (page skeleton)
   - menu/search/results/footer fragments in three original styles (`pulse`, `atlas`, `lumen`)
   - `gateway:compose` command that assembles shell + selected style profile
+- gateway search index placeholders for the public-read path:
+  - `INDEX_FETCH_MODE`
+  - `PUBLIC_INDEX_ENDPOINT`
+  - `INDEX_REQUEST_BODY_JSON`
+- pinned release workflow:
+  - `gateway:release:build` for immutable release maps
 - block-library batch 02 (stavebnice for real site flows):
   - auth blocks (`login`, `register`, `recovery`)
   - commerce blocks (`product-grid`, `cart-drawer`, `checkout-summary`)
@@ -23,6 +29,7 @@ This repo now includes:
 ## What this repo is for
 - Keep template bundles outside gateway runtime code.
 - Render deterministic, auditable artifacts before publish (for Arweave release flow).
+- Keep OTP-first trust and route resolution on the gateway worker; use the public-read index path only for the read-only catalog.
 - Enforce a basic security policy and integration declarations per template.
 
 ## Quick Start
@@ -68,6 +75,7 @@ Smoke test boots registry, renders templates, runs security scan, and verifies m
 - Block library batch 02: `docs/BLOCK_LIBRARY_BATCH_02.md`
 - Variant map example: `docs/gateway-search-variant-map.example.json`
 - Release map v0.1.0: `docs/releases/gateway-search-v0.1.0.json`
+- Release build command: `gateway:release:build`
 
 ## Component-kit model (project default)
 - Templates are split into reusable parts (`menu`, `search`, `results`, `footer`) rather than one big page.

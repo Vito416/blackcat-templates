@@ -8,6 +8,7 @@
 ## Stage 2 – Gateway Search Templates ✅
 - Added three distinct gateway-search UX variants (`signal`, `bastion`, `horizon`) as public templates.
 - Added placeholders required for universal gateway routing (`SITE_TITLE`, `GATEWAY_ORIGIN`, `SEARCH_ACTION`).
+- Added public-index placeholders (`INDEX_FETCH_MODE`, `PUBLIC_INDEX_ENDPOINT`, `INDEX_REQUEST_BODY_JSON`) so the index list can move to the public-read path without changing the OTP-first action boundary.
 - Kept templates stateless and secret-free so bundles can be published to Arweave.
 
 ## Stage 3 – Componentized Front-End Kit ✅
@@ -21,7 +22,7 @@
 - Locked the direction to TS/JS frontend-logic blocks with worker-only secret/sign boundaries.
 
 ## Stage 5 – Release Automation (next)
-- Add template release manifest generation (`variant -> txid/hash`) for gateway operators.
+- Add `gateway:release:build` plus pinned release-map generation (`variant -> txid/hash`) for gateway operators.
 - Add CI checks that rendered bundles remain deterministic across runs.
 - Add schema validation for template release metadata consumed by gateway config.
 

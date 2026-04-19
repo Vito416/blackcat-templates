@@ -60,6 +60,22 @@ $searchTemplate = $renderer->render('gateway_search_variant_signal', [
 assert(str_contains($searchTemplate, 'Darkmesh Search'));
 assert(str_contains($searchTemplate, 'public.resolve-route'));
 
+$publicIndexTemplate = $renderer->render('gateway_search_variant_signal', [
+    'SITE_TITLE' => 'Darkmesh Search',
+    'SITE_TAGLINE' => 'Composable UX',
+    'GATEWAY_ORIGIN' => 'https://gateway.example',
+    'SEARCH_ACTION' => 'public.resolve-route',
+    'INDEX_ACTION' => 'public.site-index',
+    'INDEX_FETCH_MODE' => 'public_read',
+    'PUBLIC_INDEX_ENDPOINT' => '/api/public/site-index',
+    'INDEX_REQUEST_BODY_JSON' => '{}',
+    'INDEX_LIMIT' => '24',
+    'INDEX_SEED_JSON' => '[]',
+]);
+assert(str_contains($publicIndexTemplate, 'String("public_read" || "template_call")'));
+assert(str_contains($publicIndexTemplate, 'String("/api/public/site-index" || "/api/public/site-index")'));
+assert(str_contains($publicIndexTemplate, 'safeJson(String("{}" || "{}"), {})'));
+
 $menuFragment = $renderer->render('gateway_component_menu_pulse', [
     'SITE_TITLE' => 'Darkmesh Search',
 ]);
