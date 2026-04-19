@@ -65,6 +65,9 @@ Workflow:
 Published release map:
 - `docs/releases/gateway-search-v0.1.0.json`
 
+Release notes:
+- `docs/releases/CHANGELOG.v0.1.0.md`
+
 Variant tx ids:
 - `signal`: `CZ6Wg4Ir2R_xFdMprOb1AZ-0H_AoE-nMLKpJjb8wDg8`
 - `bastion`: `9hOM1kdaOjjStHOIPrk8vXcvLObH96MuXsAYJ8Qtg_g`
