@@ -29,4 +29,6 @@
 ## Stage 6 – Template Marketplace Readiness (next)
 - Add formal template metadata (compatibility matrix, required gateway minimum version).
 - Add release notes/changelog per template variant.
-- Add starter snippets for `blackcat-darkmesh-web` builder integration.
+- Add starter snippets for `blackcat-darkmesh-web` builder integration using `docs/WEB_BUILDER_INTEGRATION.md`.
+- Add builder-side mapping for direct variants -> component profiles so sites can migrate without changing token values.
+- Add release-map consumption examples for pinned web builds.
