@@ -87,6 +87,9 @@
         const gatewayOrigin = String("{{GATEWAY_ORIGIN}}" || "").replace(/\/+$/, "");
         const searchAction = "{{SEARCH_ACTION}}";
         const indexAction = String("{{INDEX_ACTION}}" || "").trim();
+        const indexFetchMode = String("{{INDEX_FETCH_MODE}}" || "template_call").trim().toLowerCase() || "template_call";
+        const publicIndexEndpoint = String("{{PUBLIC_INDEX_ENDPOINT}}" || "/api/public/site-index").trim() || "/api/public/site-index";
+        const indexRequestBodyJson = safeJson(String("{{INDEX_REQUEST_BODY_JSON}}" || "{}"), {});
         const indexLimit = Math.max(1, Number.parseInt("{{INDEX_LIMIT}}", 10) || 120);
 
         const form = document.getElementById("search-form");
@@ -205,19 +208,25 @@
           }
 
           try {
-            const response = await fetch(gatewayOrigin + "/template/call", {
+            const usePublicRead = indexFetchMode === "public_read";
+            const requestBody = usePublicRead
+              ? (indexRequestBodyJson && typeof indexRequestBodyJson === "object" && !Array.isArray(indexRequestBodyJson)
+                  ? indexRequestBodyJson
+                  : {})
+              : {
+                  action: indexAction,
+                  payload: { limit: indexLimit },
+                };
+            const response = await fetch(gatewayOrigin + (usePublicRead ? publicIndexEndpoint : "/template/call"), {
               method: "POST",
               headers: { "content-type": "application/json" },
-              body: JSON.stringify({
-                action: indexAction,
-                payload: { limit: indexLimit },
-              }),
+              body: JSON.stringify(requestBody),
             });
             const data = await response.json().catch(function () { return {}; });
             if (!response.ok) {
               throw new Error((data && (data.error || data.code)) || "index_fetch_failed");
             }
-            const rawItems = data.items || (data.data && data.data.items) || data.sites || [];
+            const rawItems = data.items || (data.data && data.data.items) || data.sites || (data.data && data.data.sites) || [];
             const normalized = Array.isArray(rawItems) ? rawItems.map(normalize).filter(Boolean) : [];
             const finalEntries = normalized.length ? normalized : seedNormalized;
             renderIndex(shuffle(finalEntries));
