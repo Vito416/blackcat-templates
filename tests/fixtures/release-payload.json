@@ -1,0 +1,22 @@
+{
+  "SITE_TITLE": "Darkmesh Search",
+  "SITE_TAGLINE": "Composable public UX",
+  "SEARCH_PLACEHOLDER": "Find route, domain, or page id...",
+  "GATEWAY_ORIGIN": "https://gateway.example",
+  "SEARCH_ACTION": "public.resolve-route",
+  "INDEX_ACTION": "public.site-index",
+  "INDEX_FETCH_MODE": "public_read",
+  "PUBLIC_INDEX_ENDPOINT": "/api/public/site-index",
+  "INDEX_REQUEST_BODY_JSON": "{}",
+  "INDEX_LIMIT": "24",
+  "INDEX_MODE_LABEL": "EU fairness mode: randomized order per refresh",
+  "INDEX_SEED_JSON": "[{\"title\":\"Seed Atlas\",\"host\":\"atlas.example\",\"path\":\"/\",\"query\":\"atlas.example\"}]",
+  "BRAND_HREF": "/",
+  "MENU_ITEMS_HTML": "<a class=\"rounded-lg border border-white/20 px-3 py-2 hover:bg-white/10\" href=\"#catalog\">Catalog</a><a class=\"rounded-lg border border-white/20 px-3 py-2 hover:bg-white/10\" href=\"#explore\">Explore</a><a class=\"rounded-lg border border-white/20 px-3 py-2 hover:bg-white/10\" href=\"#about\">About</a>",
+  "MENU_CTA_LABEL": "Open Map",
+  "MENU_CTA_HREF": "#",
+  "FOOTER_NOTE": "Public templates are deterministic and auditable.",
+  "FOOTER_LINKS_HTML": "<a class=\"hover:text-cyan-200\" href=\"#\">Status</a><a class=\"hover:text-cyan-200\" href=\"#\">Policy</a><a class=\"hover:text-cyan-200\" href=\"#\">Source</a>",
+  "SHELL_BODY_CLASS": "",
+  "SHELL_EXTRA_CSS": ""
+}

@@ -23,3 +23,132 @@ jobs:
 
       - name: Smoke test
         run: php tests/SmokeTest.php
+
+      - name: Release determinism check
+        run: |
+          set -euo pipefail
+
+          export BLACKCAT_TEMPLATES_CONFIG="$PWD/config/example.templates.php"
+
+          mapfile -t release_profiles < tests/fixtures/release-profiles.txt
+          payload_file="tests/fixtures/release-payload.json"
+
+          build_release() {
+            local output_dir="$1"
+            php bin/templates "$BLACKCAT_TEMPLATES_CONFIG" gateway:release:build "${release_profiles[@]}" "@${payload_file}" "$output_dir" "ci-determinism"
+          }
+
+          run_one="$(mktemp -d)"
+          run_two="$(mktemp -d)"
+
+          build_release "$run_one"
+          build_release "$run_two"
+
+          php -r '
+          declare(strict_types=1);
+
+          if ($argc !== 5) {
+              fwrite(STDERR, "Expected manifest paths and output directories.\n");
+              exit(1);
+          }
+
+          [$script, $manifestOnePath, $manifestTwoPath, $runOneDir, $runTwoDir] = $argv;
+
+          $loadJson = static function (string $path): array {
+              $raw = file_get_contents($path);
+              if ($raw === false) {
+                  throw new RuntimeException("Unable to read: " . $path);
+              }
+
+              $data = json_decode($raw, true);
+              if (!is_array($data)) {
+                  throw new RuntimeException("Invalid JSON in: " . $path);
+              }
+
+              return $data;
+          };
+
+          $canonicalize = null;
+          $canonicalize = static function (mixed $value) use (&$canonicalize): mixed {
+              if (!is_array($value)) {
+                  return $value;
+              }
+
+              if (array_is_list($value)) {
+                  return array_map($canonicalize, $value);
+              }
+
+              ksort($value, SORT_STRING);
+              foreach ($value as $key => $item) {
+                  $value[$key] = $canonicalize($item);
+              }
+
+              return $value;
+          };
+
+          $assertShape = static function (array $manifest): void {
+              $expectedTopLevel = ["generatedAt", "releaseVersion", "variants"];
+              $keys = array_keys($manifest);
+              sort($keys, SORT_STRING);
+              sort($expectedTopLevel, SORT_STRING);
+              if ($keys !== $expectedTopLevel) {
+                  throw new RuntimeException("Manifest top-level shape changed.");
+              }
+
+              if (!is_array($manifest["variants"]) || $manifest["variants"] === []) {
+                  throw new RuntimeException("Manifest variants must be a non-empty object.");
+              }
+
+              foreach ($manifest["variants"] as $variantKey => $variant) {
+                  if (!is_array($variant)) {
+                      throw new RuntimeException("Variant entry must be an object: " . $variantKey);
+                  }
+
+                  $variantKeys = array_keys($variant);
+                  sort($variantKeys, SORT_STRING);
+                  $expectedVariantKeys = ["bytes", "file", "sha256", "templateId", "variant"];
+                  sort($expectedVariantKeys, SORT_STRING);
+                  if ($variantKeys !== $expectedVariantKeys) {
+                      throw new RuntimeException("Variant shape changed for: " . $variantKey);
+                  }
+              }
+          };
+
+          $assertArtifactHashes = static function (array $manifest, string $outputDir): void {
+              foreach ($manifest["variants"] as $variantKey => $variant) {
+                  $filePath = $outputDir . DIRECTORY_SEPARATOR . $variant["file"];
+                  if (!is_file($filePath)) {
+                      throw new RuntimeException("Missing artifact file: " . $filePath);
+                  }
+
+                  $fileHash = hash_file("sha256", $filePath);
+                  if ($fileHash !== $variant["sha256"]) {
+                      throw new RuntimeException("Artifact hash mismatch for " . $variantKey);
+                  }
+
+                  $fileSize = filesize($filePath);
+                  if ($fileSize !== (int) $variant["bytes"]) {
+                      throw new RuntimeException("Artifact size mismatch for " . $variantKey);
+                  }
+              }
+          };
+
+          $manifestOne = $loadJson($manifestOnePath);
+          $manifestTwo = $loadJson($manifestTwoPath);
+
+          $assertShape($manifestOne);
+          $assertShape($manifestTwo);
+          $assertArtifactHashes($manifestOne, $runOneDir);
+          $assertArtifactHashes($manifestTwo, $runTwoDir);
+
+          unset($manifestOne["generatedAt"], $manifestTwo["generatedAt"]);
+
+          $canonicalOne = $canonicalize($manifestOne);
+          $canonicalTwo = $canonicalize($manifestTwo);
+
+          if ($canonicalOne !== $canonicalTwo) {
+              throw new RuntimeException("Release manifest shape or contents are not deterministic.");
+          }
+
+          echo "Gateway release determinism check passed\n";
+          '
