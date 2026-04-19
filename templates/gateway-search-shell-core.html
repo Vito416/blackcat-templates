@@ -86,9 +86,32 @@
     <script id="gateway-seed-index" type="application/json">{{INDEX_SEED_JSON}}</script>
     <script>
       (function () {
-        const gatewayOrigin = String("{{GATEWAY_ORIGIN}}" || "").replace(/\/+$/, "");
-        const searchAction = "{{SEARCH_ACTION}}";
-        const indexAction = String("{{INDEX_ACTION}}" || "").trim();
+        function placeholderValue(value, fallback) {
+          const text = String(value || "").trim();
+          if (!text || /^\{\{.*\}\}$/.test(text)) return fallback;
+          return text;
+        }
+
+        function parseJson(text, fallback) {
+          try {
+            return JSON.parse(text);
+          } catch (_err) {
+            return fallback;
+          }
+        }
+
+        function extractIndexItems(data) {
+          if (Array.isArray(data)) return data;
+          if (!data || typeof data !== "object") return [];
+          return data.items || (data.data && data.data.items) || data.sites || data.entries || data.list || data.results || [];
+        }
+
+        const gatewayOrigin = placeholderValue("{{GATEWAY_ORIGIN}}", "").replace(/\/+$/, "");
+        const searchAction = placeholderValue("{{SEARCH_ACTION}}", "public.resolve-route");
+        const indexAction = placeholderValue("{{INDEX_ACTION}}", "").trim();
+        const indexFetchMode = placeholderValue("{{INDEX_FETCH_MODE}}", "template_call").trim().toLowerCase();
+        const publicIndexEndpoint = placeholderValue("{{PUBLIC_INDEX_ENDPOINT}}", "/api/public/site-index");
+        const indexRequestBodyJson = parseJson(placeholderValue("{{INDEX_REQUEST_BODY_JSON}}", "{}"), {});
         const indexLimit = Math.max(1, Number.parseInt("{{INDEX_LIMIT}}", 10) || 120);
 
         const form = document.getElementById("gateway-search-form");
@@ -212,20 +235,34 @@
         async function loadIndex() {
           const seedRaw = document.getElementById("gateway-seed-index");
           const seedItems = normalizeList(safeJson(seedRaw ? seedRaw.textContent || "[]" : "[]", []));
-          if (!indexAction || !gatewayOrigin) {
+          if (!gatewayOrigin) {
+            currentEntries = shuffle(seedItems);
+            renderItems(currentEntries);
+            return;
+          }
+
+          const usePublicRead = indexFetchMode === "public_read";
+          if (!usePublicRead && !indexAction) {
             currentEntries = shuffle(seedItems);
             renderItems(currentEntries);
             return;
           }
 
           try {
-            const response = await fetch(gatewayOrigin + "/template/call", {
+            const requestBody = usePublicRead
+              ? {
+                  ...(indexRequestBodyJson && typeof indexRequestBodyJson === "object" && !Array.isArray(indexRequestBodyJson)
+                    ? indexRequestBodyJson
+                    : {}),
+                }
+              : {
+                  action: indexAction,
+                  payload: { limit: indexLimit },
+                };
+            const response = await fetch(gatewayOrigin + (usePublicRead ? publicIndexEndpoint : "/template/call"), {
               method: "POST",
               headers: { "content-type": "application/json" },
-              body: JSON.stringify({
-                action: indexAction,
-                payload: { limit: indexLimit },
-              }),
+              body: JSON.stringify(requestBody),
             });
 
             const data = await response.json().catch(() => ({}));
@@ -233,7 +270,7 @@
               throw new Error((data && (data.error || data.code)) || "index_fetch_failed");
             }
 
-            const source = data.items || (data.data && data.data.items) || data.sites || [];
+            const source = extractIndexItems(data);
             const normalized = normalizeList(source);
             currentEntries = shuffle(normalized.length ? normalized : seedItems);
             renderItems(currentEntries);
