@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace BlackCat\Templates\Release;
 
 use BlackCat\Templates\Renderer\TemplateRenderer;
-use DateTimeImmutable;
-use DateTimeZone;
 use RuntimeException;
 
 final class GatewayReleaseBuilder
@@ -116,7 +114,7 @@ final class GatewayReleaseBuilder
 
         $manifest = [
             'releaseVersion' => $releaseVersion,
-            'generatedAt' => $this->generatedAt(),
+            'generatedAt' => ReleaseDeterminism::generatedAt($payload),
             'variants' => $artifacts,
         ];
 
@@ -204,11 +202,6 @@ final class GatewayReleaseBuilder
         if (file_put_contents($path, $content) === false) {
             throw new RuntimeException('Unable to write file: ' . $path);
         }
-    }
-
-    private function generatedAt(): string
-    {
-        return (new DateTimeImmutable('now', new DateTimeZone('UTC')))->format('Y-m-d\TH:i:s.u\Z');
     }
 
     /**
